@@ -41,11 +41,17 @@ function BlockPage() {
 
   async function create(topic: string) {
     const existing = byTopic.get(topic);
-    if (existing) return navigate({ to: "/unit/$id", params: { id: existing.id } });
+    if (existing) {
+      navigate({ to: "/unit/$id", params: { id: existing.id } });
+      return;
+    }
     setCreating(topic);
     const r = await gen({ data: { block, topic } });
     setCreating(null);
-    if (!r.id) return toast.error(r.error ?? "No se pudo crear la lección");
+    if (!r.id) {
+      toast.error(r.error ?? "No se pudo crear la lección");
+      return;
+    }
     await qc.invalidateQueries({ queryKey: ["units"] });
     qc.invalidateQueries({ queryKey: ["items"] });
     navigate({ to: "/unit/$id", params: { id: r.id } });
@@ -61,7 +67,7 @@ function BlockPage() {
 
   let topics: Topic[] = [];
   if (block === "daily") topics = DAILY_TOPICS;
-  if (block === "general") topics = GENERAL_UNITS[level].map((t, i) => ({ title: t, description: `Unidad ${i + 1} · ${level}`, emoji: ["📘", "🗣️", "🎧", "✍️", "📖", "💡"][i % 6] }));
+  if (block === "general") topics = GENERAL_UNITS[level].map((t, i) => ({ title: t, description: `Unidad ${i + 1} · ${level}`, emoji: ["📘", "🗣️", "🎧", "✍️", "📖", "💡"][i % 6] ?? "📘" }));
   if (block === "work") topics = (profile.data?.work_topics as Topic[]) ?? [];
 
   return (

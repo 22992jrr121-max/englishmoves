@@ -97,7 +97,7 @@ export async function generateJson<T>(opts: {
 export async function synthesizeSpeech(text: string, signal?: AbortSignal) {
   return fetch(`${BASE}/v1/audio/speech`, {
     method: "POST",
-    signal,
+    signal: signal ?? null,
     headers: { Authorization: `Bearer ${apiKey()}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       model: TTS_MODEL,

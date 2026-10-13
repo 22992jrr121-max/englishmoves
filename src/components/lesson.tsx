@@ -13,7 +13,7 @@ export function FlashCards({ cards, onMark }: { cards: Card[]; onMark?: (term: s
   const [i, setI] = useState(0);
   const [flipped, setFlipped] = useState(false);
   if (!cards.length) return null;
-  const c = cards[i];
+  const c = cards[i]!;
   const go = (d: number) => {
     setFlipped(false);
     setI((x) => (x + d + cards.length) % cards.length);
@@ -245,7 +245,7 @@ export function DialogueSim({
   const [i, setI] = useState(0);
   const [done, setDone] = useState<Record<number, Feedback>>({});
   if (!lines.length) return null;
-  const line = lines[i];
+  const line = lines[i]!;
   return (
     <div className="space-y-4">
       <div className="space-y-2">

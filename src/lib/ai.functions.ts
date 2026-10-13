@@ -190,7 +190,7 @@ export const transcribe = createServerFn({ method: "POST" })
       for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
       const mime = data.mime.startsWith("video/") ? data.mime.replace("video/", "audio/") : data.mime;
       const ext = mime.includes("mp4") ? "m4a" : mime.includes("ogg") ? "ogg" : mime.includes("wav") ? "wav" : "webm";
-      const text = await transcribeAudio(new File([bytes], `speech.${ext}`, { type: mime.split(";")[0] }), data.hint);
+      const text = await transcribeAudio(new File([bytes], `speech.${ext}`, { type: mime.split(";")[0] ?? mime }), data.hint);
       return { text, error: null as string | null };
     } catch (e) {
       return { text: "", error: e instanceof Error ? e.message : "No se pudo transcribir." };

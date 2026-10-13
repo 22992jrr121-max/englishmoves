@@ -72,7 +72,7 @@ export function ReviewSession({ count = 8, compact = false }: { count?: number; 
       </div>
     );
 
-  const q = questions[i];
+  const q = questions[i]!;
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
@@ -88,8 +88,8 @@ export function ReviewSession({ count = 8, compact = false }: { count?: number; 
             if (fb.correct) setRight((r) => r + 1);
             await record({
               item_id: q.item?.id,
-              unit_id: q.item?.unit_id ?? q.unit_id,
-              block: q.item?.block ?? q.block,
+              unit_id: q.item?.unit_id ?? q.unit_id ?? null,
+              block: q.item?.block ?? q.block ?? null,
               exercise_type: q.ex.type,
               prompt: q.ex.prompt,
               answer,
