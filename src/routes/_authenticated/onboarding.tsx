@@ -51,7 +51,7 @@ function Onboarding() {
       toast.error("No se pudo guardar. Inténtalo de nuevo.");
       return;
     }
-    await qc.invalidateQueries({ queryKey: ["profile"] });
+    await qc.refetchQueries({ queryKey: ["profile"] });
     navigate({ to: "/home" });
   }
 
