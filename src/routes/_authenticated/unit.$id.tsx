@@ -72,7 +72,7 @@ function UnitPage() {
     ...(c.dialogue?.length ? [{ k: "dialogue" as Tab, label: "Diálogo" }] : []),
     { k: "practice", label: `Practica (${c.exercises.length})` },
   ];
-  const ex = c.exercises[idx];
+  const ex = c.exercises[idx]!;
 
   return (
     <Page>

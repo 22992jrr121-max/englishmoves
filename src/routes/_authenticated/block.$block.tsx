@@ -61,7 +61,10 @@ function BlockPage() {
     setLoadingTopics(true);
     const r = await genTopics();
     setLoadingTopics(false);
-    if (r.error) return toast.error(r.error);
+    if (r.error) {
+      toast.error(r.error);
+      return;
+    }
     qc.invalidateQueries({ queryKey: ["profile"] });
   }
 

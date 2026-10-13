@@ -42,7 +42,10 @@ function Profile() {
       .update({ display_name: name, level, job_description: job.trim(), goal: goal || null, ...(jobChanged ? { work_topics: [] } : {}), updated_at: new Date().toISOString() })
       .eq("id", profile.data!.id);
     setSaving(false);
-    if (error) return toast.error("No se pudo guardar");
+    if (error) {
+      toast.error("No se pudo guardar");
+      return;
+    }
     qc.invalidateQueries({ queryKey: ["profile"] });
     toast.success(jobChanged ? "Guardado. Tu temario profesional se regenerará; tu historial se conserva." : "Perfil guardado");
   }

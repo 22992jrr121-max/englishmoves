@@ -24,7 +24,7 @@ function Onboarding() {
   const [job, setJob] = useState("");
   const [goal, setGoal] = useState("");
   const [saving, setSaving] = useState(false);
-  const correct = answers.filter((a, i) => a === DIAGNOSTIC[i].answer).length;
+  const correct = answers.filter((a, i) => a === DIAGNOSTIC[i]?.answer).length;
 
   function choose(i: number) {
     setPicked(i);
@@ -33,7 +33,7 @@ function Onboarding() {
       setAnswers(next);
       setPicked(null);
       if (next.length === DIAGNOSTIC.length) {
-        setLevel(levelFromScore(next.filter((a, k) => a === DIAGNOSTIC[k].answer).length));
+        setLevel(levelFromScore(next.filter((a, k) => a === DIAGNOSTIC[k]?.answer).length));
         setStep(11);
       } else setStep(step + 1);
     }, 250);
@@ -47,7 +47,10 @@ function Onboarding() {
       .update({ level, diagnostic_score: correct, job_description: job.trim(), goal: goal.trim() || null, onboarded: true, work_topics: [] })
       .eq("id", u.user!.id);
     setSaving(false);
-    if (error) return toast.error("No se pudo guardar. Inténtalo de nuevo.");
+    if (error) {
+      toast.error("No se pudo guardar. Inténtalo de nuevo.");
+      return;
+    }
     await qc.invalidateQueries({ queryKey: ["profile"] });
     navigate({ to: "/home" });
   }

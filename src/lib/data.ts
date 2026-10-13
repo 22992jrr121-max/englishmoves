@@ -56,19 +56,19 @@ export const useAttempts = () => useQuery(attemptsQuery);
 export function useRecordAttempt() {
   const qc = useQueryClient();
   return async (a: {
-    unit_id?: string | null;
-    item_id?: string | null;
-    block?: string | null;
+    unit_id?: string | null | undefined;
+    item_id?: string | null | undefined;
+    block?: string | null | undefined;
     exercise_type: string;
     prompt: string;
     answer: string;
     expected: string;
     correct: boolean;
     score: number;
-    feedback?: string | null;
-    currentMastery?: number;
-    itemAttempts?: number;
-    itemCorrect?: number;
+    feedback?: string | null | undefined;
+    currentMastery?: number | undefined;
+    itemAttempts?: number | undefined;
+    itemCorrect?: number | undefined;
   }) => {
     const user_id = await uid();
     await supabase.from("attempts").insert({
