@@ -26,7 +26,7 @@ export function buildReview(items: Item[], failed: { prompt: string; expected: s
     else if (kind === "meaning")
       out.push({ item: it, ex: { type: "multiple_choice", section: "Repaso · significado", instruction_es: `¿Qué significa “${it.term}”?`, prompt: it.term, options: shuffle([it.meaning, ...others.map((o) => o.meaning)]), answer: it.meaning, explanation_es: it.example ?? "" } });
     else
-      out.push({ item: it, ex: { type: "multiple_choice", section: "Repaso · listening", instruction_es: "Escucha la palabra y elige la correcta", prompt: it.term, options: shuffle([it.term, ...others.map((o) => o.term)]), answer: it.term, explanation_es: `${it.term}: ${it.meaning}` } });
+      out.push({ item: it, ex: { type: "listening_choice", section: "Repaso · listening", instruction_es: "Escucha la palabra y elige la correcta", prompt: it.term, options: shuffle([it.term, ...others.map((o) => o.term)]), answer: it.term, explanation_es: `${it.term}: ${it.meaning}` } });
   });
   const seen = new Set<string>();
   failed
@@ -82,7 +82,7 @@ export function ReviewSession({ count = 8, compact = false }: { count?: number; 
       <div className={compact ? "" : "rounded-3xl border bg-card p-5 shadow-soft"}>
         <ExerciseCard
           key={`${seed}-${i}`}
-          ex={q.ex.section === "Repaso · listening" ? { ...q.ex, type: "listening_choice" as never } : q.ex}
+          ex={q.ex}
           onDone={async (answer: string, fb: Feedback) => {
             setAnswered(true);
             if (fb.correct) setRight((r) => r + 1);

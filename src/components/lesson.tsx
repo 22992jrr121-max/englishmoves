@@ -1,11 +1,10 @@
 import { useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, ChevronLeft, ChevronRight, Loader2, RotateCcw, Sparkles as _unused, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Loader2, RotateCcw, X } from "lucide-react";
 import { correctAnswer } from "@/lib/ai.functions";
 import { checkLocal, isLocallyChecked, normalize, type Card, type Exercise } from "@/lib/learning";
 import { ListenButton, ReadAloud } from "./audio";
 import { cn } from "@/lib/utils";
-void _unused;
 
 export type Feedback = { correct: boolean; score: number; corrected?: string; feedback_es?: string };
 
@@ -135,10 +134,10 @@ export function ExerciseCard({
         <p className="mt-3 text-sm font-medium text-muted-foreground">{ex.instruction_es}</p>
       </div>
 
-      {ex.type === "listening" ? (
+      {ex.type === "listening" || ex.type === "listening_choice" ? (
         <div className="flex items-center gap-3 rounded-2xl bg-cobalt-soft p-4">
           <ListenButton text={ex.prompt} size="lg" />
-          <p className="text-sm font-semibold">Escucha y escribe lo que oyes</p>
+          <p className="text-sm font-semibold">{ex.type === "listening" ? "Escucha y escribe lo que oyes" : "Escucha y elige lo que oyes"}</p>
         </div>
       ) : ex.type === "order_words" ? null : (
         <div className="flex items-start gap-3">
@@ -152,7 +151,7 @@ export function ExerciseCard({
           expected={ex.prompt}
           onResult={(r) => !fb && onDone(r.text, { correct: r.score >= 70, score: r.score })}
         />
-      ) : ex.type === "multiple_choice" ? (
+      ) : ex.type === "multiple_choice" || ex.type === "listening_choice" ? (
         <div className="grid gap-2">
           {ex.options.map((o) => {
             const isAns = normalize(o) === normalize(ex.answer);

@@ -63,7 +63,8 @@ export type ExerciseType =
   | "translate"
   | "open_question"
   | "listening"
-  | "read_aloud";
+  | "read_aloud"
+  | "listening_choice";
 export type Exercise = {
   type: ExerciseType;
   section: string;
@@ -95,7 +96,7 @@ export function normalize(s: string) {
 
 /** Exercises that can be checked exactly without AI. */
 export function isLocallyChecked(t: ExerciseType) {
-  return t === "multiple_choice" || t === "fill_blank" || t === "order_words" || t === "listening";
+  return t === "multiple_choice" || t === "fill_blank" || t === "order_words" || t === "listening" || t === "listening_choice";
 }
 
 export function checkLocal(answer: string, expected: string) {
