@@ -14,7 +14,206 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attempts: {
+        Row: {
+          answer: string | null
+          block: string | null
+          correct: boolean
+          created_at: string
+          exercise_type: string
+          expected: string | null
+          feedback: string | null
+          id: string
+          item_id: string | null
+          prompt: string
+          score: number
+          unit_id: string | null
+          user_id: string
+        }
+        Insert: {
+          answer?: string | null
+          block?: string | null
+          correct?: boolean
+          created_at?: string
+          exercise_type: string
+          expected?: string | null
+          feedback?: string | null
+          id?: string
+          item_id?: string | null
+          prompt: string
+          score?: number
+          unit_id?: string | null
+          user_id: string
+        }
+        Update: {
+          answer?: string | null
+          block?: string | null
+          correct?: boolean
+          created_at?: string
+          exercise_type?: string
+          expected?: string | null
+          feedback?: string | null
+          id?: string
+          item_id?: string | null
+          prompt?: string
+          score?: number
+          unit_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attempts_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "learned_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attempts_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learned_items: {
+        Row: {
+          attempts: number
+          block: string
+          correct: number
+          created_at: string
+          example: string | null
+          id: string
+          last_seen: string | null
+          mastery: number
+          meaning: string
+          term: string
+          unit_id: string | null
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          block: string
+          correct?: number
+          created_at?: string
+          example?: string | null
+          id?: string
+          last_seen?: string | null
+          mastery?: number
+          meaning: string
+          term: string
+          unit_id?: string | null
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          block?: string
+          correct?: number
+          created_at?: string
+          example?: string | null
+          id?: string
+          last_seen?: string | null
+          mastery?: number
+          meaning?: string
+          term?: string
+          unit_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learned_items_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          diagnostic_score: number | null
+          display_name: string | null
+          goal: string | null
+          id: string
+          job_description: string | null
+          level: string | null
+          onboarded: boolean
+          updated_at: string
+          work_topics: Json
+        }
+        Insert: {
+          created_at?: string
+          diagnostic_score?: number | null
+          display_name?: string | null
+          goal?: string | null
+          id: string
+          job_description?: string | null
+          level?: string | null
+          onboarded?: boolean
+          updated_at?: string
+          work_topics?: Json
+        }
+        Update: {
+          created_at?: string
+          diagnostic_score?: number | null
+          display_name?: string | null
+          goal?: string | null
+          id?: string
+          job_description?: string | null
+          level?: string | null
+          onboarded?: boolean
+          updated_at?: string
+          work_topics?: Json
+        }
+        Relationships: []
+      }
+      units: {
+        Row: {
+          block: string
+          content: Json
+          created_at: string
+          id: string
+          level: string
+          progress: number
+          score: number | null
+          status: string
+          title: string
+          topic: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          block: string
+          content: Json
+          created_at?: string
+          id?: string
+          level: string
+          progress?: number
+          score?: number | null
+          status?: string
+          title: string
+          topic: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          block?: string
+          content?: Json
+          created_at?: string
+          id?: string
+          level?: string
+          progress?: number
+          score?: number | null
+          status?: string
+          title?: string
+          topic?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
