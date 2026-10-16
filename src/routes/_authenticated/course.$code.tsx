@@ -241,7 +241,7 @@ function SectionView({ section: s, unit, isDone, onCard, onAnswer, onFinish }: {
   );
 }
 
-function GrammarBox({ title, text, form, examples }: { title: string; text?: string; form?: string; examples?: string[] }) {
+function GrammarBox({ title, text, form, examples }: { title: string; text?: string | undefined; form?: string | undefined; examples?: string[] | undefined }) {
   return (
     <section className="space-y-3 rounded-3xl bg-cobalt-soft p-5">
       <h2 className="text-lg font-extrabold text-navy">{title}</h2>

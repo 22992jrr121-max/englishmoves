@@ -95,7 +95,7 @@ export type ExamTask = {
   requires_human_review?: boolean;
   items: ExamItem[];
 };
-export type ExamReview = Record<string, Record<string, { correct: boolean; answer: string; explanation?: string }>>;
+export type ExamReview = Record<string, Record<string, { correct: boolean; answer: string; explanation?: string | undefined }>>;
 
 export const PAPER_LABEL: Record<string, string> = {
   listening: "Listening",

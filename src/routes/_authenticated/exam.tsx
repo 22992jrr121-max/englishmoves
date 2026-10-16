@@ -125,7 +125,7 @@ function choicesFor(t: ExamTask, it: ExamItem): string[] | null {
   return null;
 }
 
-function TaskCard({ index, task: t, answers, review, onAnswer }: { index: number; task: ExamTask; answers: Record<string, string>; review?: Record<string, { correct: boolean; answer: string; explanation?: string }>; onAnswer: (n: number, v: string) => void }) {
+function TaskCard({ index, task: t, answers, review, onAnswer }: { index: number; task: ExamTask; answers: Record<string, string>; review?: Record<string, { correct: boolean; answer: string; explanation?: string | undefined }> | undefined; onAnswer: (n: number, v: string) => void }) {
   const dict = (t.options && !Array.isArray(t.options) ? t.options : null) ?? t.candidate_paragraphs ?? t.candidate_sentences ?? null;
   const text = t.text_with_gaps ?? t.text;
   const done = !!review;

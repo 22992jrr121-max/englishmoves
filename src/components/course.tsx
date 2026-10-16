@@ -102,7 +102,7 @@ export function Criteria({ items }: { items: string[] }) {
   );
 }
 
-export function WrittenPractice({ criteria, range, value, onChange }: { criteria: string[]; range?: string; value: string; onChange: (v: string) => void }) {
+export function WrittenPractice({ criteria, range, value, onChange }: { criteria: string[]; range?: string | undefined; value: string; onChange: (v: string) => void }) {
   const words = value.trim() ? value.trim().split(/\s+/).length : 0;
   return (
     <div className="space-y-3">
@@ -114,7 +114,7 @@ export function WrittenPractice({ criteria, range, value, onChange }: { criteria
 }
 
 /** One course exercise. onDone(answer, correct) — correct is null for open tasks. */
-export function CourseExerciseCard({ ex, criteria, range, onDone }: { ex: CourseExercise; criteria: string[]; range?: string; onDone: (answer: string, correct: boolean | null) => void }) {
+export function CourseExerciseCard({ ex, criteria, range, onDone }: { ex: CourseExercise; criteria: string[]; range?: string | undefined; onDone: (answer: string, correct: boolean | null) => void }) {
   const [value, setValue] = useState("");
   const [result, setResult] = useState<boolean | null | undefined>(undefined);
   const sent = result !== undefined;

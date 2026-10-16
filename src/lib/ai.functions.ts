@@ -273,7 +273,7 @@ export const generateExam = createServerFn({ method: "POST" })
     const tasks = (await examTasksFor(level)).map((t) => {
       const { accepted_answers: _a, teacher_key: _k, ...rest } = t;
       const clean = { ...rest, items: t.items.map(({ answer: _x, explanation: _e, ...it }) => ({ ...it, gradable: gradable({ ...it, answer: _x } as RawItem) })) };
-      if (clean.segments) delete (clean as Record<string, unknown>).script;
+      if ((clean as Record<string, unknown>)["segments"]) delete (clean as Record<string, unknown>)["script"];
       return clean as unknown as import("./course").ExamTask;
     });
     return { level, tasks, error: null as string | null };
