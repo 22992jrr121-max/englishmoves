@@ -119,27 +119,63 @@ export function nextMastery(current: number, correct: boolean) {
 
 export const CONSOLIDATED = 70;
 
-// ---------- Level progression ----------
-/** General units that must be completed at a level before its exam unlocks. */
-export const REQUIRED_UNITS = 4;
-/** Minimum unit score (%) for a completed unit to count toward the exam. */
-export const MIN_UNIT_SCORE = 60;
+// ---------- Level progression (General = the student's own course A1–C1) ----------
+/** Levels covered by the General English course; C1 is the top level. */
+export const COURSE_LEVELS = ["A1", "A2", "B1", "B2", "C1"] as const;
+export type CourseLevel = (typeof COURSE_LEVELS)[number];
+/** Course units per level; all must be finished before the level exam unlocks. */
+export const REQUIRED_UNITS = 12;
+/** Kept for display only; course units count once finished. */
+export const MIN_UNIT_SCORE = 0;
 /** Exam score (%) needed to pass and move up a level. */
 export const EXAM_PASS = 70;
 export const EXAM_QUESTIONS = 15;
 
-export function nextLevel(level: Level): Level | null {
-  const i = LEVELS.indexOf(level);
-  return i >= 0 && i < LEVELS.length - 1 ? (LEVELS[i + 1] as Level) : null;
+/** Course level shown for a profile level (C2 students see C1). */
+export function courseLevel(level: string | null | undefined): CourseLevel {
+  return (COURSE_LEVELS as readonly string[]).includes(level ?? "") ? (level as CourseLevel) : level === "C2" ? "C1" : "A1";
 }
 
-/** Counts general units of this level done with a good enough score. */
-export function qualifyingUnits(units: { block: string; level: string | null; status: string; score: number | null }[], level: Level) {
-  return units.filter((u) => u.block === "general" && u.level === level && u.status === "done" && (u.score ?? 0) >= MIN_UNIT_SCORE).length;
+export function isCourseCode(topic: string) {
+  return /^(A1|A2|B1|B2|C1)-\d{2}$/.test(topic);
+}
+
+/** Next level reachable through the course exam (none after C1). */
+export function nextLevel(level: Level): Level | null {
+  const i = (COURSE_LEVELS as readonly string[]).indexOf(level);
+  return i >= 0 && i < COURSE_LEVELS.length - 1 ? (COURSE_LEVELS[i + 1] as Level) : null;
+}
+
+/** Counts finished course units of this level. */
+export function qualifyingUnits(units: { block: string; level: string | null; status: string; topic?: string }[], level: Level) {
+  return units.filter((u) => u.block === "general" && u.level === level && u.status === "done" && isCourseCode(u.topic ?? "")).length;
 }
 
 export function examUnlocked(units: Parameters<typeof qualifyingUnits>[0], level: Level) {
   return nextLevel(level) !== null && qualifyingUnits(units, level) >= REQUIRED_UNITS;
+}
+
+/**
+ * A course unit is open when its level is below the student's level, or it is in the
+ * student's level and every earlier unit of that level is finished (one after another).
+ */
+export function unitUnlocked(code: string, studentLevel: string | null | undefined, doneCodes: string[]) {
+  const lvl = code.slice(0, 2);
+  const cur = courseLevel(studentLevel);
+  const li = (COURSE_LEVELS as readonly string[]).indexOf(lvl);
+  const ci = COURSE_LEVELS.indexOf(cur);
+  if (li < 0 || li > ci) return false;
+  if (li < ci) return true;
+  const seq = Number(code.slice(3));
+  for (let s = 1; s < seq; s++) if (!doneCodes.includes(`${lvl}-${String(s).padStart(2, "0")}`)) return false;
+  return true;
+}
+
+/** Case/space/punctuation-insensitive check against the answer and accepted variants. */
+export function checkCourseAnswer(answer: string, expected: string | null | undefined, accepted: string[] = []) {
+  const a = normalize(answer);
+  if (!a || expected == null) return false;
+  return [expected, ...accepted].some((e) => normalize(e) === a);
 }
 
 export function examScore(correct: number, total: number) {
