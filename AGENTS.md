@@ -14,3 +14,6 @@
 - Lesson content is AI-generated once per unit and stored as JSON in `units.content`; vocabulary cards become `learned_items` rows — review and history read those rows, not regenerated content.
 - Pure learning rules (diagnostic scoring, mastery, answer checks) live in `src/lib/learning.ts` with tests in `src/test/learning.test.ts`.
 - Signed-in pages live under `src/routes/_authenticated/`, whose layout renders the bubble dock.
+- Chat with Emma streams from the `/api/chat` server route (`src/lib/chat.server.ts`, AI SDK Responses); it verifies the bearer token itself and persists each `UIMessage` in `chat_messages` — a server route because the AI SDK UI stream needs a raw HTTP response.
+- Live speaking calls use the persistent WebSocket relay `src/lib/live-relay.server.ts`, dispatched from `src/server.ts` (published) and `live-vite-plugin.ts` (dev); the browser sends scenario + access token in `app.start` and the relay verifies the user before opening a paid session.
+- Level-up exams are graded/recorded only by the `submitExam` server function (admin insert into `level_exams`, profile level update), so students cannot write exam results directly.

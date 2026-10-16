@@ -52,7 +52,7 @@ export function NotesFab() {
       <aside
         className={cn(
           "fixed right-0 top-0 z-50 flex h-full w-[min(22rem,100vw)] flex-col border-l bg-card shadow-float transition-transform duration-300",
-          open ? "translate-x-0" : "translate-x-full",
+          open ? "translate-x-0" : "invisible translate-x-full",
         )}
         aria-hidden={!open}
       >
