@@ -1,6 +1,7 @@
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { nextMastery } from "./learning";
+import type { CourseState, CourseUnit } from "./course";
 
 async function uid() {
   const { data } = await supabase.auth.getUser();
@@ -147,6 +148,24 @@ export function useAddNote() {
     if (error) throw error;
     qc.invalidateQueries({ queryKey: ["notes"] });
   };
+}
+
+/** Gets (or creates on first open) the progress row of a course unit, and its review cards. */
+export async function ensureCourseUnit(u: CourseUnit) {
+  const user_id = await uid();
+  const { data: rows } = await supabase.from("units").select("*").eq("block", "general").eq("topic", u.id).limit(1);
+  if (rows?.[0]) return rows[0];
+  const state: CourseState = { course: u.id, done: [], scores: {} };
+  const { data, error } = await supabase
+    .from("units")
+    .insert({ user_id, block: "general", level: u.level, topic: u.id, title: u.title, content: state, status: "in_progress", progress: 0 })
+    .select("*")
+    .single();
+  if (error) throw error;
+  const vocab = u.sections.filter((s) => s.key === "vocabulary" || s.key === "phrasal_verbs").flatMap((s) => s.items ?? []);
+  if (vocab.length)
+    await supabase.from("learned_items").insert(vocab.map((v) => ({ user_id, unit_id: data.id, block: "general", term: v.en, meaning: v.es, example: v.example })));
+  return data;
 }
 
 /** Turns a note into a review card (learned_items row) so it enters smart review. */
