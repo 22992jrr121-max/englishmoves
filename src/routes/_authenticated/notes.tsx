@@ -25,7 +25,7 @@ function NotesPage() {
 
   async function remove(id: string) {
     const { error } = await supabase.from("notes").delete().eq("id", id);
-    if (error) return toast.error("No se pudo borrar");
+    if (error) { toast.error("No se pudo borrar"); return; }
     qc.invalidateQueries({ queryKey: ["notes"] });
   }
   async function toCard(n: (typeof list)[number]) {

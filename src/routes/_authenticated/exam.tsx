@@ -36,7 +36,7 @@ function ExamPage() {
     setLoading(true);
     const r = await gen();
     setLoading(false);
-    if (r.error || !r.questions.length) return toast.error(r.error ?? "No se pudo crear el examen");
+    if (r.error || !r.questions.length) { toast.error(r.error ?? "No se pudo crear el examen"); return; }
     setQs(r.questions);
     setAnswers({});
     setResult(null);
@@ -47,7 +47,7 @@ function ExamPage() {
     setLoading(true);
     const r = await submit({ data: { correct, total: qs.length } });
     setLoading(false);
-    if (r.error) return toast.error(r.error);
+    if (r.error) { toast.error(r.error); return; }
     setResult(r);
     qc.invalidateQueries({ queryKey: ["profile"] });
     qc.invalidateQueries({ queryKey: ["exams"] });
