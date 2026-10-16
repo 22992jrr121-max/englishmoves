@@ -24,6 +24,7 @@ import { Route as AuthenticatedReviewRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedSpeakingRouteImport } from './routes/_authenticated/speaking'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedBlockBlockRouteImport } from './routes/_authenticated/block.$block'
+import { Route as AuthenticatedCourseCodeRouteImport } from './routes/_authenticated/course.$code'
 import { Route as AuthenticatedUnitIdRouteImport } from './routes/_authenticated/unit.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -100,6 +101,11 @@ const AuthenticatedBlockBlockRoute = AuthenticatedBlockBlockRouteImport.update({
   path: '/block/$block',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCourseCodeRoute = AuthenticatedCourseCodeRouteImport.update({
+  id: '/course/$code',
+  path: '/course/$code',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedUnitIdRoute = AuthenticatedUnitIdRouteImport.update({
   id: '/unit/$id',
   path: '/unit/$id',
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/speaking': typeof AuthenticatedSpeakingRoute
   '/api/chat': typeof ApiChatRoute
   '/block/$block': typeof AuthenticatedBlockBlockRoute
+  '/course/$code': typeof AuthenticatedCourseCodeRoute
   '/unit/$id': typeof AuthenticatedUnitIdRoute
 }
 export interface FileRoutesByTo {
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/speaking': typeof AuthenticatedSpeakingRoute
   '/api/chat': typeof ApiChatRoute
   '/block/$block': typeof AuthenticatedBlockBlockRoute
+  '/course/$code': typeof AuthenticatedCourseCodeRoute
   '/unit/$id': typeof AuthenticatedUnitIdRoute
 }
 export interface FileRoutesById {
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/_authenticated/speaking': typeof AuthenticatedSpeakingRoute
   '/api/chat': typeof ApiChatRoute
   '/_authenticated/block/$block': typeof AuthenticatedBlockBlockRoute
+  '/_authenticated/course/$code': typeof AuthenticatedCourseCodeRoute
   '/_authenticated/unit/$id': typeof AuthenticatedUnitIdRoute
 }
 export interface FileRouteTypes {
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/speaking'
     | '/api/chat'
     | '/block/$block'
+    | '/course/$code'
     | '/unit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | '/speaking'
     | '/api/chat'
     | '/block/$block'
+    | '/course/$code'
     | '/unit/$id'
   id:
     | '__root__'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/_authenticated/speaking'
     | '/api/chat'
     | '/_authenticated/block/$block'
+    | '/_authenticated/course/$code'
     | '/_authenticated/unit/$id'
   fileRoutesById: FileRoutesById
 }
@@ -328,6 +340,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBlockBlockRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/course/$code': {
+      id: '/_authenticated/course/$code'
+      path: '/course/$code'
+      fullPath: '/course/$code'
+      preLoaderRoute: typeof AuthenticatedCourseCodeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/unit/$id': {
       id: '/_authenticated/unit/$id'
       path: '/unit/$id'
@@ -350,6 +369,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedReviewRoute: typeof AuthenticatedReviewRoute
   AuthenticatedSpeakingRoute: typeof AuthenticatedSpeakingRoute
   AuthenticatedBlockBlockRoute: typeof AuthenticatedBlockBlockRoute
+  AuthenticatedCourseCodeRoute: typeof AuthenticatedCourseCodeRoute
   AuthenticatedUnitIdRoute: typeof AuthenticatedUnitIdRoute
 }
 
@@ -365,6 +385,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedReviewRoute: AuthenticatedReviewRoute,
   AuthenticatedSpeakingRoute: AuthenticatedSpeakingRoute,
   AuthenticatedBlockBlockRoute: AuthenticatedBlockBlockRoute,
+  AuthenticatedCourseCodeRoute: AuthenticatedCourseCodeRoute,
   AuthenticatedUnitIdRoute: AuthenticatedUnitIdRoute,
 }
 

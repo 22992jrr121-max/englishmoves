@@ -1,0 +1,482 @@
+[
+{
+"id": "A1-01",
+"level": "A1",
+"sequence": 1,
+"title": "Presentaciones y datos personales",
+"objective": "Saludar, decir el nombre, la procedencia y la ocupación, y preguntar esos datos.",
+"exercises": 56
+},
+{
+"id": "A1-02",
+"level": "A1",
+"sequence": 2,
+"title": "Familia y relaciones",
+"objective": "Describir a familiares y expresar posesión.",
+"exercises": 56
+},
+{
+"id": "A1-03",
+"level": "A1",
+"sequence": 3,
+"title": "Casa y objetos cotidianos",
+"objective": "Describir habitaciones, muebles y ubicación de objetos.",
+"exercises": 56
+},
+{
+"id": "A1-04",
+"level": "A1",
+"sequence": 4,
+"title": "Rutinas y horarios",
+"objective": "Explicar hábitos diarios y decir la hora.",
+"exercises": 56
+},
+{
+"id": "A1-05",
+"level": "A1",
+"sequence": 5,
+"title": "Comida y bebida",
+"objective": "Pedir comida y hablar de cantidades y preferencias.",
+"exercises": 56
+},
+{
+"id": "A1-06",
+"level": "A1",
+"sequence": 6,
+"title": "La ciudad y las direcciones",
+"objective": "Preguntar por lugares y dar indicaciones sencillas.",
+"exercises": 56
+},
+{
+"id": "A1-07",
+"level": "A1",
+"sequence": 7,
+"title": "Tiempo libre y aficiones",
+"objective": "Expresar gustos, habilidades y actividades de tiempo libre.",
+"exercises": 56
+},
+{
+"id": "A1-08",
+"level": "A1",
+"sequence": 8,
+"title": "Ropa y compras",
+"objective": "Describir ropa, preguntar precios y comprar artículos sencillos.",
+"exercises": 56
+},
+{
+"id": "A1-09",
+"level": "A1",
+"sequence": 9,
+"title": "Pasado y recuerdos sencillos",
+"objective": "Contar lo que ocurrió ayer o el fin de semana.",
+"exercises": 54
+},
+{
+"id": "A1-10",
+"level": "A1",
+"sequence": 10,
+"title": "Tiempo atmosférico y acciones actuales",
+"objective": "Describir el tiempo y decir qué ocurre ahora.",
+"exercises": 54
+},
+{
+"id": "A1-11",
+"level": "A1",
+"sequence": 11,
+"title": "Viajes y planes próximos",
+"objective": "Hablar de planes de viaje y preparativos.",
+"exercises": 54
+},
+{
+"id": "A1-12",
+"level": "A1",
+"sequence": 12,
+"title": "Comparaciones y repaso",
+"objective": "Comparar personas, lugares y objetos y repasar las funciones de A1.",
+"exercises": 54
+},
+{
+"id": "A2-01",
+"level": "A2",
+"sequence": 1,
+"title": "Experiencias y pasado",
+"objective": "Narrar experiencias personales en secuencia.",
+"exercises": 56
+},
+{
+"id": "A2-02",
+"level": "A2",
+"sequence": 2,
+"title": "Viajes y alojamiento",
+"objective": "Reservar alojamiento, resolver problemas y describir un viaje.",
+"exercises": 56
+},
+{
+"id": "A2-03",
+"level": "A2",
+"sequence": 3,
+"title": "Salud y bienestar",
+"objective": "Describir síntomas y dar consejos básicos.",
+"exercises": 56
+},
+{
+"id": "A2-04",
+"level": "A2",
+"sequence": 4,
+"title": "Trabajo y estudios",
+"objective": "Describir responsabilidades, habilidades y planes profesionales.",
+"exercises": 56
+},
+{
+"id": "A2-05",
+"level": "A2",
+"sequence": 5,
+"title": "Planes, invitaciones y futuro",
+"objective": "Hacer planes, invitaciones y predicciones sencillas.",
+"exercises": 56
+},
+{
+"id": "A2-06",
+"level": "A2",
+"sequence": 6,
+"title": "Compras y servicios",
+"objective": "Explicar problemas con productos y pedir soluciones con cortesía.",
+"exercises": 56
+},
+{
+"id": "A2-07",
+"level": "A2",
+"sequence": 7,
+"title": "Tecnología y comunicación",
+"objective": "Describir dispositivos, mensajes y problemas técnicos sencillos.",
+"exercises": 56
+},
+{
+"id": "A2-08",
+"level": "A2",
+"sequence": 8,
+"title": "Naturaleza y medio ambiente",
+"objective": "Describir lugares naturales y acciones para cuidarlos.",
+"exercises": 56
+},
+{
+"id": "A2-09",
+"level": "A2",
+"sequence": 9,
+"title": "Relaciones y celebraciones",
+"objective": "Hablar de personas, invitaciones y experiencias compartidas.",
+"exercises": 54
+},
+{
+"id": "A2-10",
+"level": "A2",
+"sequence": 10,
+"title": "Noticias personales y cambios",
+"objective": "Hablar de cambios recientes y experiencias sin fecha concreta.",
+"exercises": 54
+},
+{
+"id": "A2-11",
+"level": "A2",
+"sequence": 11,
+"title": "Transportes e imprevistos",
+"objective": "Contar qué estaba pasando cuando ocurrió un imprevisto.",
+"exercises": 54
+},
+{
+"id": "A2-12",
+"level": "A2",
+"sequence": 12,
+"title": "Opiniones y recomendaciones",
+"objective": "Explicar preferencias y recomendar lugares o actividades.",
+"exercises": 55
+},
+{
+"id": "B1-01",
+"level": "B1",
+"sequence": 1,
+"title": "Viajes y experiencias",
+"objective": "Relacionar experiencias con hechos pasados concretos.",
+"exercises": 55
+},
+{
+"id": "B1-02",
+"level": "B1",
+"sequence": 2,
+"title": "Historias y sucesos",
+"objective": "Narrar acontecimientos y mostrar qué ocurrió antes.",
+"exercises": 55
+},
+{
+"id": "B1-03",
+"level": "B1",
+"sequence": 3,
+"title": "Amistad y relaciones",
+"objective": "Describir personas y hablar de relaciones y conflictos.",
+"exercises": 55
+},
+{
+"id": "B1-04",
+"level": "B1",
+"sequence": 4,
+"title": "Trabajo, estudios y objetivos",
+"objective": "Hablar de formación, obligaciones y metas.",
+"exercises": 55
+},
+{
+"id": "B1-05",
+"level": "B1",
+"sequence": 5,
+"title": "Salud, hábitos y consejos",
+"objective": "Relacionar condiciones y consecuencias en situaciones reales.",
+"exercises": 55
+},
+{
+"id": "B1-06",
+"level": "B1",
+"sequence": 6,
+"title": "Medio ambiente y comunidad",
+"objective": "Describir acciones y resultados usando la voz pasiva.",
+"exercises": 55
+},
+{
+"id": "B1-07",
+"level": "B1",
+"sequence": 7,
+"title": "Medios y noticias",
+"objective": "Transmitir lo que otra persona dijo e identificar fuentes.",
+"exercises": 55
+},
+{
+"id": "B1-08",
+"level": "B1",
+"sequence": 8,
+"title": "Tecnología y aprendizaje",
+"objective": "Hablar del propósito de herramientas y de hábitos digitales.",
+"exercises": 55
+},
+{
+"id": "B1-09",
+"level": "B1",
+"sequence": 9,
+"title": "Cultura y entretenimiento",
+"objective": "Expresar hipótesis y preferencias culturales.",
+"exercises": 53
+},
+{
+"id": "B1-10",
+"level": "B1",
+"sequence": 10,
+"title": "Dinero y decisiones",
+"objective": "Comparar gastos, ahorrar y justificar decisiones.",
+"exercises": 53
+},
+{
+"id": "B1-11",
+"level": "B1",
+"sequence": 11,
+"title": "Cambios de vida y hábitos",
+"objective": "Comparar costumbres pasadas y presentes.",
+"exercises": 53
+},
+{
+"id": "B1-12",
+"level": "B1",
+"sequence": 12,
+"title": "Síntesis B1 y práctica de examen",
+"objective": "Combinar narración, opinión y comunicación funcional en tareas tipo Preliminary.",
+"exercises": 53
+},
+{
+"id": "B2-01",
+"level": "B2",
+"sequence": 1,
+"title": "Carrera y desarrollo profesional",
+"objective": "Explicar trayectorias laborales, progreso y expectativas.",
+"exercises": 55
+},
+{
+"id": "B2-02",
+"level": "B2",
+"sequence": 2,
+"title": "Ciudad, vivienda y sociedad",
+"objective": "Describir cambios urbanos y evaluar sus efectos.",
+"exercises": 55
+},
+{
+"id": "B2-03",
+"level": "B2",
+"sequence": 3,
+"title": "Medios, información y opinión",
+"objective": "Informar con precisión y evaluar afirmaciones.",
+"exercises": 55
+},
+{
+"id": "B2-04",
+"level": "B2",
+"sequence": 4,
+"title": "Clima y decisiones ambientales",
+"objective": "Evaluar alternativas y consecuencias hipotéticas.",
+"exercises": 55
+},
+{
+"id": "B2-05",
+"level": "B2",
+"sequence": 5,
+"title": "Salud y evidencia",
+"objective": "Distinguir certeza, posibilidad e inferencia.",
+"exercises": 55
+},
+{
+"id": "B2-06",
+"level": "B2",
+"sequence": 6,
+"title": "Ciencia, descubrimientos y explicación",
+"objective": "Explicar procesos y conectar ideas con cláusulas complejas.",
+"exercises": 55
+},
+{
+"id": "B2-07",
+"level": "B2",
+"sequence": 7,
+"title": "Viajes, turismo e impacto local",
+"objective": "Evaluar consecuencias y formular recomendaciones.",
+"exercises": 55
+},
+{
+"id": "B2-08",
+"level": "B2",
+"sequence": 8,
+"title": "Relaciones, decisiones y arrepentimiento",
+"objective": "Expresar deseos y evaluar decisiones pasadas.",
+"exercises": 55
+},
+{
+"id": "B2-09",
+"level": "B2",
+"sequence": 9,
+"title": "Cultura y consumo responsable",
+"objective": "Usar colocaciones y formación de palabras con precisión.",
+"exercises": 53
+},
+{
+"id": "B2-10",
+"level": "B2",
+"sequence": 10,
+"title": "Educación y métodos de aprendizaje",
+"objective": "Comparar métodos y expresar recomendaciones fundamentadas.",
+"exercises": 53
+},
+{
+"id": "B2-11",
+"level": "B2",
+"sequence": 11,
+"title": "Servicios, reclamaciones y soluciones",
+"objective": "Describir servicios encargados a otras personas y gestionar problemas.",
+"exercises": 53
+},
+{
+"id": "B2-12",
+"level": "B2",
+"sequence": 12,
+"title": "Síntesis B2 y Use of English",
+"objective": "Combinar precisión léxica, transformaciones y argumentación.",
+"exercises": 53
+},
+{
+"id": "C1-01",
+"level": "C1",
+"sequence": 1,
+"title": "Argumentación, postura y cautela",
+"objective": "Sostener una opinión matizada y calibrar el grado de certeza.",
+"exercises": 55
+},
+{
+"id": "C1-02",
+"level": "C1",
+"sequence": 2,
+"title": "Políticas públicas y prioridades",
+"objective": "Expresar énfasis formal y contrastar prioridades sociales.",
+"exercises": 55
+},
+{
+"id": "C1-03",
+"level": "C1",
+"sequence": 3,
+"title": "Trabajo, liderazgo y lenguaje formal",
+"objective": "Redactar informes profesionales con precisión y concisión.",
+"exercises": 55
+},
+{
+"id": "C1-04",
+"level": "C1",
+"sequence": 4,
+"title": "Ciencia, incertidumbre y causalidad",
+"objective": "Explicar investigaciones y distinguir correlación de causa.",
+"exercises": 55
+},
+{
+"id": "C1-05",
+"level": "C1",
+"sequence": 5,
+"title": "Desigualdad, vivienda y escenarios",
+"objective": "Analizar situaciones actuales con causas hipotéticas pasadas.",
+"exercises": 55
+},
+{
+"id": "C1-06",
+"level": "C1",
+"sequence": 6,
+"title": "Literatura, interpretación y estilo",
+"objective": "Analizar tono, implicaciones y elecciones estilísticas.",
+"exercises": 55
+},
+{
+"id": "C1-07",
+"level": "C1",
+"sequence": 7,
+"title": "Periodismo, perspectiva y discurso referido",
+"objective": "Interpretar cómo se atribuyen ideas y puntos de vista.",
+"exercises": 55
+},
+{
+"id": "C1-08",
+"level": "C1",
+"sequence": 8,
+"title": "Energía, ecología y síntesis de información",
+"objective": "Integrar información compleja sin perder claridad.",
+"exercises": 55
+},
+{
+"id": "C1-09",
+"level": "C1",
+"sequence": 9,
+"title": "Instituciones, normas y recomendaciones",
+"objective": "Formular recomendaciones formales y condiciones restrictivas.",
+"exercises": 53
+},
+{
+"id": "C1-10",
+"level": "C1",
+"sequence": 10,
+"title": "Persuasión, énfasis y retórica",
+"objective": "Adaptar argumentos a un público y usar énfasis con control.",
+"exercises": 53
+},
+{
+"id": "C1-11",
+"level": "C1",
+"sequence": 11,
+"title": "Colocaciones, modismos y registro",
+"objective": "Elegir expresiones naturales sin perder precisión ni adecuación.",
+"exercises": 53
+},
+{
+"id": "C1-12",
+"level": "C1",
+"sequence": 12,
+"title": "Síntesis C1 y preparación integral",
+"objective": "Integrar lectura crítica, escucha, interacción y escritura avanzada.",
+"exercises": 53
+}
+]

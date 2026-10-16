@@ -2,12 +2,13 @@ import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-ro
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Loader2, Plus, RefreshCw } from "lucide-react";
+import { CheckCircle2, Loader2, Lock, Plus, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { Page, Loading, Empty } from "@/components/Page";
 import { generateUnit, generateWorkTopics } from "@/lib/ai.functions";
 import { useProfile, useUnits } from "@/lib/data";
-import { BLOCKS, DAILY_TOPICS, GENERAL_UNITS, LEVELS, type Block, type Level } from "@/lib/learning";
+import { BLOCKS, COURSE_LEVELS, DAILY_TOPICS, courseLevel, isCourseCode, unitUnlocked, type Block, type CourseLevel, type Level } from "@/lib/learning";
+import { COURSE_INDEX } from "@/lib/course";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/block/$block")({
@@ -32,9 +33,10 @@ function BlockPage() {
   const [loadingTopics, setLoadingTopics] = useState(false);
   const [custom, setCustom] = useState("");
   const userLevel = (profile.data?.level ?? "A2") as Level;
-  const [level, setLevel] = useState<Level>(userLevel);
 
   if (profile.isLoading || units.isLoading) return <Loading />;
+  if (block === "general") return <CourseList studentLevel={profile.data?.level ?? "A1"} units={units.data ?? []} />;
+
 
   const mine = (units.data ?? []).filter((u) => u.block === block);
   const byTopic = new Map(mine.map((u) => [u.topic, u]));
@@ -70,7 +72,6 @@ function BlockPage() {
 
   let topics: Topic[] = [];
   if (block === "daily") topics = DAILY_TOPICS;
-  if (block === "general") topics = GENERAL_UNITS[level].map((t, i) => ({ title: t, description: `Unidad ${i + 1} · ${level}`, emoji: ["📘", "🗣️", "🎧", "✍️", "📖", "💡"][i % 6] ?? "📘" }));
   if (block === "work") topics = (profile.data?.work_topics as Topic[]) ?? [];
 
   return (
@@ -82,16 +83,6 @@ function BlockPage() {
             <p className="text-lg font-extrabold text-navy">Creando tu lección…</p>
             <p className="text-sm text-muted-foreground">“{creating}” adaptada a tu nivel {userLevel}. Tarda unos segundos.</p>
           </div>
-        </div>
-      )}
-
-      {block === "general" && (
-        <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1">
-          {LEVELS.map((l) => (
-            <button key={l} onClick={() => setLevel(l)} className={cn("h-11 shrink-0 rounded-full border-2 px-5 font-bold", l === level ? "border-primary bg-primary text-primary-foreground" : "bg-card", l === userLevel && l !== level && "border-primary")}>
-              {l}{l === userLevel && " ★"}
-            </button>
-          ))}
         </div>
       )}
 
@@ -138,6 +129,61 @@ function BlockPage() {
         </div>
       )}
       <p className="mt-6 text-center text-sm"><Link to="/home" className="font-bold text-primary">← Volver al inicio</Link></p>
+    </Page>
+  );
+}
+
+function CourseList({ studentLevel, units }: { studentLevel: string; units: { block: string; topic: string; status: string; progress: number; score: number | null }[] }) {
+  const cur = courseLevel(studentLevel);
+  const [level, setLevel] = useState<CourseLevel>(cur);
+  const general = units.filter((u) => u.block === "general" && isCourseCode(u.topic));
+  const byCode = new Map(general.map((u) => [u.topic, u]));
+  const done = general.filter((u) => u.status === "done").map((u) => u.topic);
+  const list = COURSE_INDEX.filter((u) => u.level === level);
+  const emojis = ["📘", "🗣️", "🎧", "✍️", "📖", "💡"];
+  return (
+    <Page title={BLOCKS.general.name} subtitle="Tu curso A1–C1: vocabulario, gramática, phrasal verbs, listening, speaking, reading y writing">
+      <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1">
+        {COURSE_LEVELS.map((l) => {
+          const locked = COURSE_LEVELS.indexOf(l) > COURSE_LEVELS.indexOf(cur);
+          return (
+            <button key={l} onClick={() => setLevel(l)} className={cn("inline-flex h-11 shrink-0 items-center gap-1 rounded-full border-2 px-5 font-bold", l === level ? "border-primary bg-primary text-primary-foreground" : "bg-card", l === cur && l !== level && "border-primary")}>
+              {locked && <Lock className="h-3.5 w-3.5" />}{l}{l === cur && " ★"}
+            </button>
+          );
+        })}
+      </div>
+      {COURSE_LEVELS.indexOf(level) > COURSE_LEVELS.indexOf(cur) && (
+        <p className="mb-4 rounded-2xl bg-sun-soft p-3 text-sm font-semibold text-navy">🔒 Se abre al aprobar el examen de nivel {cur}. <Link to="/exam" className="font-bold text-primary">Ver examen</Link></p>
+      )}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {list.map((t, i) => {
+          const u = byCode.get(t.id);
+          const open = unitUnlocked(t.id, studentLevel, done);
+          const inner = (
+            <>
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-muted text-2xl">{open ? emojis[i % 6] : <Lock className="h-5 w-5 text-muted-foreground" />}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-xs font-bold text-muted-foreground">Unidad {t.sequence}</span>
+                <span className="block font-extrabold text-navy">{t.title}</span>
+                <span className="line-clamp-2 block text-sm text-muted-foreground">{t.objective}</span>
+                {u && (
+                  <span className={cn("mt-1 inline-flex items-center gap-1 text-xs font-bold", u.status === "done" ? "text-success" : "text-primary")}>
+                    {u.status === "done" ? <><CheckCircle2 className="h-3.5 w-3.5" /> Completada · {u.score}%</> : `En curso · ${u.progress}%`}
+                  </span>
+                )}
+              </span>
+            </>
+          );
+          return open ? (
+            <Link key={t.id} to="/course/$code" params={{ code: t.id }} className="flex items-center gap-4 rounded-3xl bg-card p-4 text-left shadow-soft transition hover:-translate-y-0.5 active:scale-[0.98]">{inner}</Link>
+          ) : (
+            <div key={t.id} className="flex items-center gap-4 rounded-3xl bg-card/60 p-4 text-left opacity-70">{inner}</div>
+          );
+        })}
+      </div>
+      <p className="mt-6 text-center text-xs text-muted-foreground">Las unidades se abren una tras otra. Práctica original inspirada en los formatos Cambridge; no es material oficial.</p>
+      <p className="mt-3 text-center text-sm"><Link to="/home" className="font-bold text-primary">← Volver al inicio</Link></p>
     </Page>
   );
 }
