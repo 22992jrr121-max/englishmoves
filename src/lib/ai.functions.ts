@@ -247,50 +247,66 @@ export const summarizeCall = createServerFn({ method: "POST" })
     }
   });
 
-type ExamQ = { q: string; options: string[]; answer: string; skill: string };
+type RawItem = { n: number; answer?: string | null; explanation?: string; response_type?: string; [k: string]: unknown };
+type RawTask = { id: string; level: string; items: RawItem[]; accepted_answers?: Record<string, string[]>; teacher_key?: unknown; [k: string]: unknown };
 
-/** Builds a level exam from what the student studied at that level. */
+async function examTasksFor(level: string) {
+  const mod = await import("@/content/course/exam-tasks.json");
+  return (mod.default as unknown as RawTask[]).filter((t) => t.level === level);
+}
+const gradable = (it: RawItem) => it.answer != null && !it.response_type;
+
+async function examGate(supabase: import("@supabase/supabase-js").SupabaseClient<import("@/integrations/supabase/types").Database>, userId: string) {
+  const { examUnlocked } = await import("./learning");
+  const { data: profile } = await supabase.from("profiles").select("level").eq("id", userId).single();
+  const level = (profile?.level ?? "A1") as import("./learning").Level;
+  const { data: units } = await supabase.from("units").select("block, level, status, topic").eq("user_id", userId);
+  return { level, unlocked: examUnlocked(units ?? [], level) };
+}
+
+/** Level exam built from the course's exam-practice tasks (answers never leave the server). */
 export const generateExam = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { generateJson } = await import("./ai.server");
-    const { examUnlocked, EXAM_QUESTIONS } = await import("./learning");
-    const { supabase, userId } = context;
-    const { data: profile } = await supabase.from("profiles").select("level").eq("id", userId).single();
-    const level = (profile?.level ?? "A2") as import("./learning").Level;
-    const { data: units } = await supabase.from("units").select("block, level, status, score, title").eq("user_id", userId);
-    if (!examUnlocked(units ?? [], level)) return { level, questions: [] as ExamQ[], error: "Aún no has desbloqueado el examen de este nivel." };
-    const studied = (units ?? []).filter((u) => u.level === level).map((u) => u.title).join("; ");
-    try {
-      const out = await generateJson<{ questions: ExamQ[] }>({
-        instructions: `You write Cambridge-style CEFR level exams for Spanish speakers. Create exactly ${EXAM_QUESTIONS} multiple-choice questions (4 options each) testing grammar, vocabulary, phrasal verbs and reading comprehension at the given level. answer must equal one option exactly. skill is a short Spanish label (Gramática, Vocabulario, Phrasal verbs, Comprensión).`,
-        input: `Level ${level}. Units studied: ${studied || "general topics"}.`,
-        schemaName: "exam",
-        schema: obj({ questions: { type: "array", items: obj({ q: str, options: strArr, answer: str, skill: str }) } }),
-      });
-      return { level, questions: out.questions.slice(0, EXAM_QUESTIONS), error: null as string | null };
-    } catch (e) {
-      return { level, questions: [] as ExamQ[], error: e instanceof Error ? e.message : "No se pudo crear el examen." };
-    }
+    const { level, unlocked } = await examGate(context.supabase, context.userId);
+    if (!unlocked) return { level, tasks: [] as import("./course").ExamTask[], error: "Aún no has desbloqueado el examen de este nivel." };
+    const tasks = (await examTasksFor(level)).map((t) => {
+      const { accepted_answers: _a, teacher_key: _k, ...rest } = t;
+      const clean = { ...rest, items: t.items.map(({ answer: _x, explanation: _e, ...it }) => ({ ...it, gradable: gradable({ ...it, answer: _x } as RawItem) })) };
+      if (clean.segments) delete (clean as Record<string, unknown>).script;
+      return clean as unknown as import("./course").ExamTask;
+    });
+    return { level, tasks, error: null as string | null };
   });
 
-/** Records an exam result and moves the student up a level when passed. */
+/** Grades the exam on the server, records it and moves the student up a level when passed. */
 export const submitExam = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ correct: z.number().int().min(0).max(50), total: z.number().int().min(1).max(50) }).parse(d))
+  .inputValidator((d) => z.object({ answers: z.record(z.string(), z.record(z.string(), z.string().max(500))) }).parse(d))
   .handler(async ({ data, context }) => {
-    const { examUnlocked, examScore, examPassed, nextLevel } = await import("./learning");
-    const { supabase, userId } = context;
-    const { data: profile } = await supabase.from("profiles").select("level").eq("id", userId).single();
-    const level = (profile?.level ?? "A2") as import("./learning").Level;
-    const { data: units } = await supabase.from("units").select("block, level, status, score").eq("user_id", userId);
-    if (!examUnlocked(units ?? [], level)) return { passed: false, score: 0, newLevel: null, error: "Examen no disponible." };
-    const score = examScore(Math.min(data.correct, data.total), data.total);
+    const { examScore, examPassed, nextLevel, checkCourseAnswer } = await import("./learning");
+    const { level, unlocked } = await examGate(context.supabase, context.userId);
+    if (!unlocked) return { passed: false, score: 0, newLevel: null, review: {}, error: "Examen no disponible." };
+    const review: import("./course").ExamReview = {};
+    let correct = 0;
+    let total = 0;
+    for (const t of await examTasksFor(level)) {
+      review[t.id] = {};
+      for (const it of t.items) {
+        if (!gradable(it)) continue;
+        total++;
+        const given = data.answers[t.id]?.[String(it.n)] ?? "";
+        const ok = checkCourseAnswer(given, it.answer, t.accepted_answers?.[String(it.n)] ?? []);
+        if (ok) correct++;
+        review[t.id]![String(it.n)] = { correct: ok, answer: String(it.answer), explanation: it.explanation || undefined };
+      }
+    }
+    const score = examScore(correct, total);
     const passed = examPassed(score);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.from("level_exams").insert({ user_id: userId, level, score, passed });
-    if (error) return { passed: false, score, newLevel: null, error: "No se pudo guardar el resultado." };
+    const { error } = await supabaseAdmin.from("level_exams").insert({ user_id: context.userId, level, score, passed });
+    if (error) return { passed: false, score, newLevel: null, review, error: "No se pudo guardar el resultado." };
     const up = passed ? nextLevel(level) : null;
-    if (up) await supabaseAdmin.from("profiles").update({ level: up }).eq("id", userId);
-    return { passed, score, newLevel: up, error: null as string | null };
+    if (up) await supabaseAdmin.from("profiles").update({ level: up }).eq("id", context.userId);
+    return { passed, score, newLevel: up, review, error: null as string | null };
   });
