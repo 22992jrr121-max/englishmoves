@@ -35,6 +35,8 @@ function BlockPage() {
   const [level, setLevel] = useState<Level>(userLevel);
 
   if (profile.isLoading || units.isLoading) return <Loading />;
+  if (block === "general") return <CourseList studentLevel={profile.data?.level ?? "A1"} units={units.data ?? []} />;
+
 
   const mine = (units.data ?? []).filter((u) => u.block === block);
   const byTopic = new Map(mine.map((u) => [u.topic, u]));

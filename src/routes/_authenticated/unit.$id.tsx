@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
@@ -38,6 +38,8 @@ function UnitPage() {
   if (unit.isLoading) return <Loading />;
   if (!unit.data) return <Page><Empty title="Lección no encontrada" text="Puede que se haya borrado." /></Page>;
   const u = unit.data;
+  const course = (u.content as { course?: string } | null)?.course;
+  if (course) return <Navigate to="/course/$code" params={{ code: course }} />;
   const c = u.content as unknown as UnitContent;
   const block = u.block as Block;
   const unitItems = (items.data ?? []).filter((i) => i.unit_id === u.id);
