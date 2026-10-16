@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Page, Loading } from "@/components/Page";
 import { useAttempts, useItems, useProfile, useUnits, streakFrom } from "@/lib/data";
-import { BLOCKS, CONSOLIDATED, GENERAL_UNITS, LEVELS, MIN_UNIT_SCORE, REQUIRED_UNITS, examUnlocked, nextLevel, type Block, type Level } from "@/lib/learning";
+import { BLOCKS, CONSOLIDATED, COURSE_LEVELS, REQUIRED_UNITS, courseLevel, examUnlocked, nextLevel, type Block, type Level } from "@/lib/learning";
+import { COURSE_INDEX } from "@/lib/course";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/progress")({
@@ -83,23 +84,23 @@ type U = { id: string; block: string; level: string | null; topic: string; statu
 function LevelPath({ level, units }: { level: Level; units: U[] }) {
   const next = nextLevel(level);
   const general = units.filter((u) => u.block === "general" && u.level === level);
-  const stations = GENERAL_UNITS[level].map((topic) => ({ topic, unit: general.find((u) => u.topic === topic) }));
+  const stations = COURSE_INDEX.filter((c) => c.level === courseLevel(level)).map((c) => ({ topic: c.id, title: c.title, unit: general.find((u) => u.topic === c.id) }));
   const unlocked = examUnlocked(units, level);
   return (
     <section className="mt-4 rounded-3xl bg-card p-5 shadow-soft">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="font-extrabold text-navy">Tu camino {level}{next ? ` → ${next}` : ""}</h2>
-        <div className="flex gap-1">{LEVELS.map((l) => <span key={l} className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold", l === level ? "bg-primary text-primary-foreground" : LEVELS.indexOf(l) < LEVELS.indexOf(level) ? "bg-mint text-mint-foreground" : "bg-muted text-muted-foreground")}>{l}</span>)}</div>
+        <div className="flex gap-1">{COURSE_LEVELS.map((l) => <span key={l} className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold", l === courseLevel(level) ? "bg-primary text-primary-foreground" : COURSE_LEVELS.indexOf(l) < COURSE_LEVELS.indexOf(courseLevel(level)) ? "bg-mint text-mint-foreground" : "bg-muted text-muted-foreground")}>{l}</span>)}</div>
       </div>
       <ol className="relative space-y-3 pl-8 before:absolute before:left-3 before:top-2 before:h-[calc(100%-1rem)] before:w-1 before:rounded-full before:bg-muted">
-        {stations.map(({ topic, unit }, i) => {
-          const ok = unit?.status === "done" && (unit.score ?? 0) >= MIN_UNIT_SCORE;
+        {stations.map(({ topic, title, unit }, i) => {
+          const ok = unit?.status === "done";
           return (
             <li key={topic} className="relative">
               <span className={cn("absolute -left-8 top-1 flex h-7 w-7 items-center justify-center rounded-full border-4 border-card text-[11px] font-extrabold", ok ? "bg-mint text-mint-foreground" : unit ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>{i + 1}</span>
               <Link to="/block/$block" params={{ block: "general" }} className="block rounded-2xl bg-background px-4 py-2.5">
-                <p className="text-sm font-bold text-navy">{topic}</p>
-                <p className="text-xs text-muted-foreground">{ok ? `Superada · ${unit?.score}%` : unit ? `En curso${unit.status === "done" ? ` · ${unit.score}% (necesitas ${MIN_UNIT_SCORE}%)` : ""}` : "Pendiente"}</p>
+                <p className="text-sm font-bold text-navy">{title}</p>
+                <p className="text-xs text-muted-foreground">{ok ? `Completada · ${unit?.score}%` : unit ? "En curso" : "Pendiente"}</p>
               </Link>
             </li>
           );
@@ -109,7 +110,7 @@ function LevelPath({ level, units }: { level: Level; units: U[] }) {
             <span className={cn("absolute -left-8 top-1 flex h-7 w-7 items-center justify-center rounded-full border-4 border-card text-sm", unlocked ? "bg-sun" : "bg-muted")}>🏆</span>
             <Link to="/exam" className={cn("block rounded-2xl px-4 py-3", unlocked ? "bg-sun text-sun-foreground" : "bg-sun-soft text-navy")}>
               <p className="text-sm font-extrabold">Examen de nivel {level} → {next}</p>
-              <p className="text-xs opacity-80">{unlocked ? "¡Desbloqueado! Pulsa para hacerlo" : `Se desbloquea con ${REQUIRED_UNITS} unidades superadas`}</p>
+              <p className="text-xs opacity-80">{unlocked ? "¡Desbloqueado! Pulsa para hacerlo" : `Se desbloquea al terminar las ${REQUIRED_UNITS} unidades`}</p>
             </Link>
           </li>
         )}
