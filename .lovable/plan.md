@@ -2,7 +2,9 @@
 
 ## Qué cambia para el alumno
 - **Inglés General** muestra el curso que has preparado: 60 unidades (12 por nivel, A1 a C1). La IA ya no crea unidades en este bloque.
+- Se incluye todo el material del archivo: 60 unidades, 1.921 palabras de vocabulario, 300 phrasal verbs, 40 temas extra de gramática, 3.285 ejercicios, 80 tareas de examen y las 17 imágenes.
 - Cada unidad sigue tu orden: Vocabulario → Gramática (con los temas extra) → Phrasal verbs → Listening → Speaking → Reading → Writing, con sus explicaciones y ejemplos antes de los ejercicios.
+- Mismo nivel de detalle y aspecto que las lecciones actuales: tarjetas de vocabulario con audio, botón de escuchar en ejemplos, lectura en voz alta con micrófono, barra de progreso, botón de notas lateral y paso al repaso inteligente.
 - **Desbloqueo una tras otra**: dentro de su nivel, el alumno empieza por la unidad 1; cada unidad se abre al terminar la anterior. Las de niveles superiores se ven con candado.
 - **Corrección automática** de opción múltiple y respuesta corta (sin importar mayúsculas y aceptando las variantes que trae tu material). La respuesta no se enseña hasta enviar.
 - **Listening**: voz inglesa británica a la velocidad indicada, con dos reproducciones y pausa; el guion se muestra solo después de responder.
