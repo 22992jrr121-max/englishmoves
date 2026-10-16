@@ -126,3 +126,9 @@
   background-image: radial-gradient(color-mix(in oklab, var(--primary) 10%, transparent) 1px, transparent 1px);
   background-size: 22px 22px;
 }
+
+@utility bg-chat-wall {
+  background-color: var(--secondary);
+  background-image: radial-gradient(color-mix(in oklab, var(--primary) 10%, transparent) 1px, transparent 1px);
+  background-size: 18px 18px;
+}

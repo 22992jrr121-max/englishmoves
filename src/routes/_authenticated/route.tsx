@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Dock } from "@/components/Dock";
+import { NotesFab } from "@/components/NotesFab";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -21,6 +22,7 @@ function Layout() {
         <Outlet />
       </div>
       {!hideDock && <Dock />}
+      {!hideDock && <NotesFab />}
     </div>
   );
 }

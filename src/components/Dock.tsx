@@ -4,6 +4,7 @@ import progress from "@/assets/dock-progress.png";
 import history from "@/assets/dock-history.png";
 import review from "@/assets/dock-review.png";
 import profile from "@/assets/dock-profile.png";
+import notes from "@/assets/dock-notes.png";
 import { cn } from "@/lib/utils";
 
 const ITEMS = [
@@ -11,6 +12,7 @@ const ITEMS = [
   { to: "/progress", label: "Progreso", hint: "Estadísticas y avance", img: progress },
   { to: "/review", label: "Repaso", hint: "Refuerza lo que te cuesta", img: review },
   { to: "/history", label: "Histórico", hint: "Todo lo aprendido", img: history },
+  { to: "/notes", label: "Notas", hint: "Tu libreta personal", img: notes },
   { to: "/profile", label: "Perfil", hint: "Nivel, trabajo y ajustes", img: profile },
 ] as const;
 
@@ -22,7 +24,7 @@ export function Dock() {
       aria-label="Navegación principal"
       className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-2 pb-[max(0.6rem,env(safe-area-inset-bottom))]"
     >
-      <ul className="flex items-end gap-1.5 rounded-full border bg-card/90 px-2.5 py-2 shadow-float backdrop-blur-md sm:gap-3 sm:px-4">
+      <ul className="flex items-end gap-1 rounded-full border bg-card/90 px-2.5 py-2 shadow-float backdrop-blur-md sm:gap-3 sm:px-4">
         {ITEMS.map((it) => {
           const active = path.startsWith(it.to);
           return (
@@ -35,11 +37,11 @@ export function Dock() {
                 to={it.to}
                 aria-label={it.label}
                 className={cn(
-                  "flex h-14 w-14 origin-bottom items-center justify-center rounded-full border-2 bg-background transition-all duration-300 ease-out sm:h-14 sm:w-14 sm:group-hover:-translate-y-2 sm:group-hover:scale-[1.45]",
+                  "flex h-12 w-12 origin-bottom items-center justify-center rounded-full border-2 bg-background transition-all duration-300 ease-out sm:h-14 sm:w-14 sm:group-hover:-translate-y-2 sm:group-hover:scale-[1.45]",
                   active ? "border-primary bg-cobalt-soft" : "border-transparent",
                 )}
               >
-                <img src={it.img} alt="" width={192} height={192} className="h-10 w-10 object-contain" />
+                <img src={it.img} alt="" width={192} height={192} className="h-9 w-9 object-contain sm:h-10 sm:w-10" />
               </Link>
               <span className={cn("mt-0.5 text-[11px] font-semibold sm:hidden", active ? "text-primary" : "text-muted-foreground")}>
                 {it.label}

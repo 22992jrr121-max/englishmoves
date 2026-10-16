@@ -22,3 +22,24 @@ describe("mastery", () => {
     expect(nextMastery(95, true)).toBe(100);
   });
 });
+
+import { examPassed, examScore, examUnlocked, nextLevel, qualifyingUnits } from "@/lib/learning";
+describe("level progression", () => {
+  const u = (level: string, score: number, status = "done", block = "general") => ({ block, level, status, score });
+  it("next level after A2 is B1 and C2 has none", () => {
+    expect(nextLevel("A2")).toBe("B1");
+    expect(nextLevel("C2")).toBeNull();
+  });
+  it("only counts done general units of the level with score >= 60", () => {
+    expect(qualifyingUnits([u("A2", 60), u("A2", 59), u("A2", 90, "in_progress"), u("A2", 90, "done", "daily"), u("B1", 90)], "A2")).toBe(1);
+  });
+  it("unlocks the exam with 4 qualifying units", () => {
+    expect(examUnlocked([u("A2", 80), u("A2", 70), u("A2", 65)], "A2")).toBe(false);
+    expect(examUnlocked([u("A2", 80), u("A2", 70), u("A2", 65), u("A2", 60)], "A2")).toBe(true);
+  });
+  it("passes the exam at 70%", () => {
+    expect(examScore(10, 15)).toBe(67);
+    expect(examPassed(examScore(10, 15))).toBe(false);
+    expect(examPassed(examScore(11, 15))).toBe(true);
+  });
+});
