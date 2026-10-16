@@ -77,6 +77,36 @@ export type Database = {
           },
         ]
       }
+      chat_messages: {
+        Row: {
+          correction: Json | null
+          created_at: string
+          id: string
+          message: Json
+          message_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          correction?: Json | null
+          created_at?: string
+          id?: string
+          message: Json
+          message_id: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          correction?: Json | null
+          created_at?: string
+          id?: string
+          message?: Json
+          message_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       learned_items: {
         Row: {
           attempts: number
@@ -129,6 +159,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      level_exams: {
+        Row: {
+          created_at: string
+          id: string
+          level: string
+          passed: boolean
+          score: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          level: string
+          passed: boolean
+          score: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          level?: string
+          passed?: boolean
+          score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notes: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string | null
+          source: string
+          source_label: string | null
+          text: string
+          unit_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id?: string | null
+          source?: string
+          source_label?: string | null
+          text: string
+          unit_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string | null
+          source?: string
+          source_label?: string | null
+          text?: string
+          unit_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {

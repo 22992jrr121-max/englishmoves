@@ -118,3 +118,44 @@ export function nextMastery(current: number, correct: boolean) {
 }
 
 export const CONSOLIDATED = 70;
+
+// ---------- Level progression ----------
+/** General units that must be completed at a level before its exam unlocks. */
+export const REQUIRED_UNITS = 4;
+/** Minimum unit score (%) for a completed unit to count toward the exam. */
+export const MIN_UNIT_SCORE = 60;
+/** Exam score (%) needed to pass and move up a level. */
+export const EXAM_PASS = 70;
+export const EXAM_QUESTIONS = 15;
+
+export function nextLevel(level: Level): Level | null {
+  const i = LEVELS.indexOf(level);
+  return i >= 0 && i < LEVELS.length - 1 ? (LEVELS[i + 1] as Level) : null;
+}
+
+/** Counts general units of this level done with a good enough score. */
+export function qualifyingUnits(units: { block: string; level: string | null; status: string; score: number | null }[], level: Level) {
+  return units.filter((u) => u.block === "general" && u.level === level && u.status === "done" && (u.score ?? 0) >= MIN_UNIT_SCORE).length;
+}
+
+export function examUnlocked(units: Parameters<typeof qualifyingUnits>[0], level: Level) {
+  return nextLevel(level) !== null && qualifyingUnits(units, level) >= REQUIRED_UNITS;
+}
+
+export function examScore(correct: number, total: number) {
+  return total ? Math.round((correct / total) * 100) : 0;
+}
+
+export function examPassed(score: number) {
+  return score >= EXAM_PASS;
+}
+
+// ---------- Live speaking scenarios ----------
+export const SCENARIOS = {
+  cafe: { title: "En la cafetería", emoji: "☕", role: "a friendly barista in a busy coffee shop taking the student's order" },
+  interview: { title: "Entrevista de trabajo", emoji: "💼", role: "a recruiter interviewing the student for a job related to their profession" },
+  meeting: { title: "Reunión de trabajo", emoji: "🧑‍💻", role: "a colleague in a work meeting discussing the student's current projects" },
+  doctor: { title: "En el médico", emoji: "🩺", role: "a doctor asking the student about their symptoms" },
+  day: { title: "Cuéntame tu día", emoji: "🌤️", role: "a friendly English friend asking how the student's day went" },
+} as const;
+export type ScenarioId = keyof typeof SCENARIOS;

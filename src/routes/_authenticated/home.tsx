@@ -1,9 +1,11 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
-import { ArrowRight, Flame, BookOpen, Trophy, Brain } from "lucide-react";
+import { ArrowRight, Flame, BookOpen, Trophy, Brain, Phone, GraduationCap } from "lucide-react";
+import emma from "@/assets/emma.png";
+import notesImg from "@/assets/dock-notes.png";
 import { Page, Loading } from "@/components/Page";
 import { ReviewSession } from "@/components/ReviewSession";
-import { useAttempts, useItems, useProfile, useUnits, streakFrom } from "@/lib/data";
-import { BLOCKS, CONSOLIDATED, type Block } from "@/lib/learning";
+import { useAttempts, useItems, useNotes, useProfile, useUnits, streakFrom } from "@/lib/data";
+import { BLOCKS, CONSOLIDATED, REQUIRED_UNITS, nextLevel, qualifyingUnits, type Block, type Level } from "@/lib/learning";
 import daily from "@/assets/block-daily.png";
 import general from "@/assets/block-general.png";
 import work from "@/assets/block-work.png";
@@ -25,6 +27,7 @@ function Home() {
   const units = useUnits();
   const items = useItems();
   const attempts = useAttempts();
+  const notes = useNotes();
   if (profile.isLoading) return <Loading />;
   if (profile.data && !profile.data.onboarded) return <Navigate to="/onboarding" />;
   const p = profile.data;
@@ -32,6 +35,9 @@ function Home() {
   const weak = (items.data ?? []).filter((i) => i.mastery < CONSOLIDATED).length;
   const done = (units.data ?? []).filter((u) => u.status === "done").length;
   const last = (units.data ?? []).find((u) => u.status !== "done");
+  const lvl = (p?.level ?? "A2") as Level;
+  const next = nextLevel(lvl);
+  const qual = qualifyingUnits(units.data ?? [], lvl);
 
   return (
     <Page>
@@ -49,6 +55,18 @@ function Home() {
             </div>
           </section>
 
+          <section className="grid gap-3 sm:grid-cols-3">
+            {(Object.keys(BLOCKS) as Block[]).map((b) => (
+              <Link key={b} to="/block/$block" params={{ block: b }} className={cn("group relative flex min-h-44 flex-col justify-between overflow-hidden rounded-3xl p-5 transition hover:-translate-y-1", blockStyle[b].cls)}>
+                <img src={blockStyle[b].img} alt="" width={420} height={420} className="absolute -right-4 -bottom-4 h-32 w-32 object-contain transition group-hover:scale-110" />
+                <span className="text-xs font-bold uppercase tracking-wider opacity-80">Bloque</span>
+                <div className="relative max-w-[65%]">
+                  <h3 className="text-lg font-extrabold leading-tight">{BLOCKS[b].name}</h3>
+                  <p className="mt-1 text-xs opacity-85">{BLOCKS[b].tagline}</p>
+                </div>
+              </Link>
+            ))}
+          </section>
           <section className="rounded-3xl bg-sun-soft p-5 sm:p-6">
             <div className="mb-4 flex items-start justify-between gap-3">
               <div>
@@ -62,18 +80,6 @@ function Home() {
             </div>
           </section>
 
-          <section className="grid gap-3 sm:grid-cols-3">
-            {(Object.keys(BLOCKS) as Block[]).map((b) => (
-              <Link key={b} to="/block/$block" params={{ block: b }} className={cn("group relative flex min-h-44 flex-col justify-between overflow-hidden rounded-3xl p-5 transition hover:-translate-y-1", blockStyle[b].cls)}>
-                <img src={blockStyle[b].img} alt="" width={420} height={420} className="absolute -right-4 -bottom-4 h-32 w-32 object-contain transition group-hover:scale-110" />
-                <span className="text-xs font-bold uppercase tracking-wider opacity-80">Bloque</span>
-                <div className="relative max-w-[65%]">
-                  <h3 className="text-lg font-extrabold leading-tight">{BLOCKS[b].name}</h3>
-                  <p className="mt-1 text-xs opacity-85">{BLOCKS[b].tagline}</p>
-                </div>
-              </Link>
-            ))}
-          </section>
         </div>
 
         <aside className="space-y-4">
@@ -84,6 +90,29 @@ function Home() {
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${last.progress}%` }} /></div>
               <span className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-primary">Seguir <ArrowRight className="h-4 w-4" /></span>
             </Link>
+          )}
+          <div className="grid grid-cols-3 gap-3 lg:grid-cols-1">
+            <QuickLink to="/chat" img={emma} title="Chat con Emma" text="Escribe como en WhatsApp" cls="bg-mint-soft" />
+            <QuickLink to="/speaking" icon={<Phone className="h-5 w-5 text-primary" />} title="Speaking" text="Llamada en directo" cls="bg-cobalt-soft" />
+            <QuickLink to="/notes" img={notesImg} title="Mi libreta" text={`${notes.data?.length ?? 0} notas`} cls="bg-sun-soft" />
+          </div>
+          <Link to="/exam" className="block rounded-3xl bg-card p-5 shadow-soft">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground"><GraduationCap className="h-4 w-4" /> Subir de nivel</p>
+            {next ? (
+              <>
+                <p className="mt-1 font-extrabold text-navy">{lvl} → {next}</p>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-mint" style={{ width: `${Math.min(100, (qual / REQUIRED_UNITS) * 100)}%` }} /></div>
+                <p className="mt-2 text-sm text-muted-foreground">{qual >= REQUIRED_UNITS ? "¡Examen desbloqueado!" : `${qual}/${REQUIRED_UNITS} unidades de General para el examen`}</p>
+              </>
+            ) : (
+              <p className="mt-1 font-extrabold text-navy">Nivel máximo alcanzado 🎉</p>
+            )}
+          </Link>
+          {(notes.data ?? []).length > 0 && (
+            <div className="rounded-3xl bg-card p-5 shadow-soft">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Últimas notas</p>
+              {(notes.data ?? []).slice(0, 3).map((n) => <p key={n.id} className="truncate border-b py-1.5 text-sm text-navy last:border-0">{n.text}</p>)}
+            </div>
           )}
           <div className="grid grid-cols-3 gap-3 lg:grid-cols-1">
             <Stat icon={<Flame className="h-5 w-5 text-sun" />} value={streak} label="Días seguidos" />
@@ -105,5 +134,19 @@ function Stat({ icon, value, label }: { icon: React.ReactNode; value: number; la
         <p className="text-xs text-muted-foreground">{label}</p>
       </div>
     </div>
+  );
+}
+
+function QuickLink({ to, img, icon, title, text, cls }: { to: "/chat" | "/speaking" | "/notes"; img?: string; icon?: React.ReactNode; title: string; text: string; cls: string }) {
+  return (
+    <Link to={to} className={cn("flex flex-col gap-2 rounded-3xl p-4 transition hover:-translate-y-0.5 lg:flex-row lg:items-center lg:gap-3", cls)}>
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-card">
+        {img ? <img src={img} alt="" width={40} height={40} className="h-10 w-10 object-cover" /> : icon}
+      </span>
+      <span className="min-w-0">
+        <span className="block text-sm font-extrabold text-navy">{title}</span>
+        <span className="block truncate text-xs text-muted-foreground">{text}</span>
+      </span>
+    </Link>
   );
 }

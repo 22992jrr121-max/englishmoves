@@ -196,3 +196,101 @@ export const transcribe = createServerFn({ method: "POST" })
       return { text: "", error: e instanceof Error ? e.message : "No se pudo transcribir." };
     }
   });
+
+/** Gentle correction for one chat message; stored on the chat row. */
+export const correctChatMessage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ messageId: z.string().min(1).max(200), text: z.string().min(1).max(2000) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { generateJson } = await import("./ai.server");
+    const { data: profile } = await context.supabase.from("profiles").select("level").eq("id", context.userId).single();
+    try {
+      const out = await generateJson<{ ok: boolean; corrected: string; note_es: string }>({
+        instructions:
+          "You check a Spanish-speaking English learner's chat message. ok=true if it is natural and correct for casual chat (ignore capitalization and missing final punctuation). Otherwise corrected = the minimally fixed natural English version, note_es = one short Spanish sentence explaining the main fix. If ok, corrected = the same text and note_es = ''.",
+        input: `Level ${profile?.level ?? "A2"}. Message: ${data.text}`,
+        schemaName: "chat_correction",
+        schema: obj({ ok: { type: "boolean" }, corrected: str, note_es: str }),
+      });
+      await context.supabase.from("chat_messages").update({ correction: out }).eq("user_id", context.userId).eq("message_id", data.messageId);
+      return { ...out, error: null as string | null };
+    } catch (e) {
+      return { ok: true, corrected: "", note_es: "", error: e instanceof Error ? e.message : "Error" };
+    }
+  });
+
+/** Post-call feedback for a live speaking session. */
+export const summarizeCall = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z.object({ scenario: z.string().max(80), transcript: z.array(z.object({ role: z.enum(["user", "assistant"]), text: z.string().max(2000) })).max(200) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { generateJson } = await import("./ai.server");
+    const { data: profile } = await context.supabase.from("profiles").select("level").eq("id", context.userId).single();
+    const convo = data.transcript.map((t) => `${t.role === "user" ? "Student" : "Tutor"}: ${t.text}`).join("\n").slice(-12000);
+    try {
+      return await generateJson<{ fluency: number; strengths_es: string[]; improvements: { said: string; better: string; note_es: string }[]; new_words: string[] }>({
+        instructions:
+          "You are an English speaking coach. Review a spoken role-play transcript (student speech is auto-transcribed, ignore transcription noise). fluency 0-100. strengths_es: 2-3 short Spanish bullet points. improvements: up to 5 items quoting what the student said and a better natural version, with a short Spanish note. new_words: up to 6 useful English words/expressions from the conversation the student should keep.",
+        input: `Level ${profile?.level ?? "A2"}. Scenario: ${data.scenario}\n${convo}`,
+        schemaName: "call_summary",
+        schema: obj({
+          fluency: { type: "integer" },
+          strengths_es: strArr,
+          improvements: { type: "array", items: obj({ said: str, better: str, note_es: str }) },
+          new_words: strArr,
+        }),
+      });
+    } catch (e) {
+      return { fluency: 0, strengths_es: [], improvements: [], new_words: [], error: e instanceof Error ? e.message : "Error" };
+    }
+  });
+
+type ExamQ = { q: string; options: string[]; answer: string; skill: string };
+
+/** Builds a level exam from what the student studied at that level. */
+export const generateExam = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { generateJson } = await import("./ai.server");
+    const { examUnlocked, EXAM_QUESTIONS } = await import("./learning");
+    const { supabase, userId } = context;
+    const { data: profile } = await supabase.from("profiles").select("level").eq("id", userId).single();
+    const level = (profile?.level ?? "A2") as import("./learning").Level;
+    const { data: units } = await supabase.from("units").select("block, level, status, score, title").eq("user_id", userId);
+    if (!examUnlocked(units ?? [], level)) return { level, questions: [] as ExamQ[], error: "Aún no has desbloqueado el examen de este nivel." };
+    const studied = (units ?? []).filter((u) => u.level === level).map((u) => u.title).join("; ");
+    try {
+      const out = await generateJson<{ questions: ExamQ[] }>({
+        instructions: `You write Cambridge-style CEFR level exams for Spanish speakers. Create exactly ${EXAM_QUESTIONS} multiple-choice questions (4 options each) testing grammar, vocabulary, phrasal verbs and reading comprehension at the given level. answer must equal one option exactly. skill is a short Spanish label (Gramática, Vocabulario, Phrasal verbs, Comprensión).`,
+        input: `Level ${level}. Units studied: ${studied || "general topics"}.`,
+        schemaName: "exam",
+        schema: obj({ questions: { type: "array", items: obj({ q: str, options: strArr, answer: str, skill: str }) } }),
+      });
+      return { level, questions: out.questions.slice(0, EXAM_QUESTIONS), error: null as string | null };
+    } catch (e) {
+      return { level, questions: [] as ExamQ[], error: e instanceof Error ? e.message : "No se pudo crear el examen." };
+    }
+  });
+
+/** Records an exam result and moves the student up a level when passed. */
+export const submitExam = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ correct: z.number().int().min(0).max(50), total: z.number().int().min(1).max(50) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { examUnlocked, examScore, examPassed, nextLevel } = await import("./learning");
+    const { supabase, userId } = context;
+    const { data: profile } = await supabase.from("profiles").select("level").eq("id", userId).single();
+    const level = (profile?.level ?? "A2") as import("./learning").Level;
+    const { data: units } = await supabase.from("units").select("block, level, status, score").eq("user_id", userId);
+    if (!examUnlocked(units ?? [], level)) return { passed: false, score: 0, newLevel: null, error: "Examen no disponible." };
+    const score = examScore(Math.min(data.correct, data.total), data.total);
+    const passed = examPassed(score);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("level_exams").insert({ user_id: userId, level, score, passed });
+    if (error) return { passed: false, score, newLevel: null, error: "No se pudo guardar el resultado." };
+    const up = passed ? nextLevel(level) : null;
+    if (up) await supabaseAdmin.from("profiles").update({ level: up }).eq("id", userId);
+    return { passed, score, newLevel: up, error: null as string | null };
+  });

@@ -6,4 +6,9 @@
 - [x] Progress, History, Review, Profile + bubble dock
 - [x] Mobile-friendly dock, cards and audio controls
 - [x] Mic states: permission denied, recording, processing, error + retry
+- [x] Home: blocks first, then smart review
+- [x] WhatsApp-style chat with Emma (in-app)
+- [x] Live speaking call with scenarios + summary
+- [x] Notebook: side button, notes page, convert to review card
+- [x] Level path + level exam (4 units ≥60%, pass 70%)
 - [ ] Subscription payments (later, per user)

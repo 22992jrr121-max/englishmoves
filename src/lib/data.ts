@@ -112,3 +112,52 @@ export function streakFrom(dates: string[]) {
   }
   return streak;
 }
+
+export const notesQuery = queryOptions({
+  queryKey: ["notes"],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("notes").select("*").order("created_at", { ascending: false });
+    if (error) throw error;
+    return data;
+  },
+});
+export const useNotes = () => useQuery(notesQuery);
+
+export const examsQuery = queryOptions({
+  queryKey: ["exams"],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("level_exams").select("*").order("created_at", { ascending: false });
+    if (error) throw error;
+    return data;
+  },
+});
+export const useExams = () => useQuery(examsQuery);
+
+export function useAddNote() {
+  const qc = useQueryClient();
+  return async (n: { text: string; source: string; source_label?: string | null; unit_id?: string | null }) => {
+    const user_id = await uid();
+    const { error } = await supabase.from("notes").insert({
+      user_id,
+      text: n.text.slice(0, 2000),
+      source: n.source,
+      source_label: n.source_label ?? null,
+      unit_id: n.unit_id ?? null,
+    });
+    if (error) throw error;
+    qc.invalidateQueries({ queryKey: ["notes"] });
+  };
+}
+
+/** Turns a note into a review card (learned_items row) so it enters smart review. */
+export async function noteToCard(note: { id: string; text: string; unit_id: string | null }, meaning: string) {
+  const user_id = await uid();
+  const [term, ...rest] = note.text.split(/\s[-—=:]\s/);
+  const { data, error } = await supabase
+    .from("learned_items")
+    .insert({ user_id, unit_id: note.unit_id, block: "notes", term: (term ?? note.text).trim().slice(0, 200), meaning: meaning || rest.join(" ").trim() || "—", example: note.text.slice(0, 500) })
+    .select("id")
+    .single();
+  if (error) throw error;
+  await supabase.from("notes").update({ item_id: data.id }).eq("id", note.id);
+}
