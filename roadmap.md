@@ -10,5 +10,6 @@
 - [x] WhatsApp-style chat with Emma (in-app)
 - [x] Live speaking call with scenarios + summary
 - [x] Notebook: side button, notes page, convert to review card
-- [x] Level path + level exam (4 units ≥60%, pass 70%)
+- [x] Level path + level exam (pass 70%)
+- [x] General = imported A1–C1 course (60 units, sequential unlock, exam from course tasks)
 - [ ] Subscription payments (later, per user)
