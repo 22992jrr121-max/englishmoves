@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Page, Loading } from "@/components/Page";
 import { useAttempts, useItems, useProfile, useUnits, streakFrom } from "@/lib/data";
-import { BLOCKS, CONSOLIDATED, type Block } from "@/lib/learning";
+import { BLOCKS, CONSOLIDATED, GENERAL_UNITS, LEVELS, MIN_UNIT_SCORE, REQUIRED_UNITS, examUnlocked, nextLevel, type Block, type Level } from "@/lib/learning";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/progress")({
   head: () => ({ meta: [{ title: "Progreso — GoEnglish!" }, { name: "description", content: "Tu avance por bloque, aciertos y racha." }] }),
@@ -44,6 +45,8 @@ function Progress() {
         ))}
       </div>
 
+      <LevelPath level={(profile.data?.level ?? "A2") as Level} units={units.data ?? []} />
+
       <section className="mt-4 rounded-3xl bg-card p-5 shadow-soft">
         <h2 className="mb-3 font-extrabold text-navy">Actividad (14 días)</h2>
         <div className="h-48">
@@ -72,5 +75,45 @@ function Progress() {
         })}
       </section>
     </Page>
+  );
+}
+
+type U = { id: string; block: string; level: string | null; topic: string; status: string; score: number | null };
+
+function LevelPath({ level, units }: { level: Level; units: U[] }) {
+  const next = nextLevel(level);
+  const general = units.filter((u) => u.block === "general" && u.level === level);
+  const stations = GENERAL_UNITS[level].map((topic) => ({ topic, unit: general.find((u) => u.topic === topic) }));
+  const unlocked = examUnlocked(units, level);
+  return (
+    <section className="mt-4 rounded-3xl bg-card p-5 shadow-soft">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-extrabold text-navy">Tu camino {level}{next ? ` → ${next}` : ""}</h2>
+        <div className="flex gap-1">{LEVELS.map((l) => <span key={l} className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold", l === level ? "bg-primary text-primary-foreground" : LEVELS.indexOf(l) < LEVELS.indexOf(level) ? "bg-mint text-mint-foreground" : "bg-muted text-muted-foreground")}>{l}</span>)}</div>
+      </div>
+      <ol className="relative space-y-3 pl-8 before:absolute before:left-3 before:top-2 before:h-[calc(100%-1rem)] before:w-1 before:rounded-full before:bg-muted">
+        {stations.map(({ topic, unit }, i) => {
+          const ok = unit?.status === "done" && (unit.score ?? 0) >= MIN_UNIT_SCORE;
+          return (
+            <li key={topic} className="relative">
+              <span className={cn("absolute -left-8 top-1 flex h-7 w-7 items-center justify-center rounded-full border-4 border-card text-[11px] font-extrabold", ok ? "bg-mint text-mint-foreground" : unit ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>{i + 1}</span>
+              <Link to="/block/$block" params={{ block: "general" }} className="block rounded-2xl bg-background px-4 py-2.5">
+                <p className="text-sm font-bold text-navy">{topic}</p>
+                <p className="text-xs text-muted-foreground">{ok ? `Superada · ${unit?.score}%` : unit ? `En curso${unit.status === "done" ? ` · ${unit.score}% (necesitas ${MIN_UNIT_SCORE}%)` : ""}` : "Pendiente"}</p>
+              </Link>
+            </li>
+          );
+        })}
+        {next && (
+          <li className="relative">
+            <span className={cn("absolute -left-8 top-1 flex h-7 w-7 items-center justify-center rounded-full border-4 border-card text-sm", unlocked ? "bg-sun" : "bg-muted")}>🏆</span>
+            <Link to="/exam" className={cn("block rounded-2xl px-4 py-3", unlocked ? "bg-sun text-sun-foreground" : "bg-sun-soft text-navy")}>
+              <p className="text-sm font-extrabold">Examen de nivel {level} → {next}</p>
+              <p className="text-xs opacity-80">{unlocked ? "¡Desbloqueado! Pulsa para hacerlo" : `Se desbloquea con ${REQUIRED_UNITS} unidades superadas`}</p>
+            </Link>
+          </li>
+        )}
+      </ol>
+    </section>
   );
 }
