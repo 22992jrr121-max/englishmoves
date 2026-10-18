@@ -14,3 +14,4 @@
 - [x] General = imported A1–C1 course (60 units, sequential unlock, exam from course tasks)
 - [ ] Subscription payments (later, per user)
 - [x] Rename platform and replace logo, favicon and PWA icons with English Moves
+- [x] Swap to the new open-book English Moves mark (CDN asset, favicon, apple-touch-icon, PWA icons + maskable)
