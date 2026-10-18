@@ -12,7 +12,7 @@ import work from "@/assets/block-work.png";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/home")({
-  head: () => ({ meta: [{ title: "Inicio — GoEnglish!" }, { name: "description", content: "Tu panel de estudio con repaso inteligente y tus tres recorridos." }] }),
+  head: () => ({ meta: [{ title: "Inicio — English Moves" }, { name: "description", content: "Tu panel de estudio con repaso inteligente y tus tres recorridos." }, { property: "og:title", content: "Inicio — English Moves" }, { property: "og:description", content: "Tu panel de estudio con repaso inteligente y tus tres recorridos." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Home,
 });
 

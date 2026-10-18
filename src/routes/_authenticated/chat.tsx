@@ -19,7 +19,7 @@ import emma from "@/assets/emma.png";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/chat")({
-  head: () => ({ meta: [{ title: "Chat con Emma — GoEnglish!" }, { name: "description", content: "Chatea en inglés como en WhatsApp sobre tu día y tu trabajo." }] }),
+  head: () => ({ meta: [{ title: "Chat con Emma — English Moves" }, { name: "description", content: "Chatea en inglés como en WhatsApp sobre tu día y tu trabajo." }, { property: "og:title", content: "Chat con Emma — English Moves" }, { property: "og:description", content: "Chatea en inglés como en WhatsApp sobre tu día y tu trabajo." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: ChatPage,
 });
 

@@ -11,7 +11,7 @@ import emma from "@/assets/emma.png";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/speaking")({
-  head: () => ({ meta: [{ title: "Speaking en directo — GoEnglish!" }, { name: "description", content: "Practica conversación en inglés en una llamada en tiempo real." }] }),
+  head: () => ({ meta: [{ title: "Speaking en directo — English Moves" }, { name: "description", content: "Practica conversación en inglés en una llamada en tiempo real." }, { property: "og:title", content: "Speaking en directo — English Moves" }, { property: "og:description", content: "Practica conversación en inglés en una llamada en tiempo real." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: SpeakingPage,
 });
 

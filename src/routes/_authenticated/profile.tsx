@@ -10,7 +10,7 @@ import { LEVELS } from "@/lib/learning";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/profile")({
-  head: () => ({ meta: [{ title: "Perfil — GoEnglish!" }, { name: "description", content: "Edita tu nivel, tu trabajo y tus preferencias." }] }),
+  head: () => ({ meta: [{ title: "Perfil — English Moves" }, { name: "description", content: "Edita tu nivel, tu trabajo y tus preferencias." }, { property: "og:title", content: "Perfil — English Moves" }, { property: "og:description", content: "Edita tu nivel, tu trabajo y tus preferencias." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Profile,
 });
 

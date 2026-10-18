@@ -11,7 +11,7 @@ import { BLOCKS, normalize, type Block, type UnitContent } from "@/lib/learning"
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/unit/$id")({
-  head: () => ({ meta: [{ title: "Lección — GoEnglish!" }, { name: "description", content: "Aprende, escucha y practica." }] }),
+  head: () => ({ meta: [{ title: "Lección — English Moves" }, { name: "description", content: "Aprende, escucha y practica." }, { property: "og:title", content: "Lección — English Moves" }, { property: "og:description", content: "Aprende, escucha y practica." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: UnitPage,
 });
 

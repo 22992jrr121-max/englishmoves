@@ -10,7 +10,7 @@ import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
-  head: () => ({ meta: [{ title: "Test de nivel — GoEnglish!" }, { name: "description", content: "Descubre tu nivel de inglés en 10 preguntas." }] }),
+  head: () => ({ meta: [{ title: "Test de nivel — English Moves" }, { name: "description", content: "Descubre tu nivel de inglés en 10 preguntas." }, { property: "og:title", content: "Test de nivel — English Moves" }, { property: "og:description", content: "Descubre tu nivel de inglés en 10 preguntas." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Onboarding,
 });
 
