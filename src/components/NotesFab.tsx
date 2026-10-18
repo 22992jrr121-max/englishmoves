@@ -44,7 +44,7 @@ export function NotesFab() {
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label="Abrir mi libreta"
-        className="fixed bottom-40 right-0 z-40 flex items-center gap-1.5 rounded-l-2xl bg-sun px-2.5 py-3 text-sm font-extrabold text-sun-foreground shadow-float transition hover:pr-4"
+        className="fixed bottom-40 right-0 z-40 hidden items-center gap-1.5 rounded-l-2xl bg-sun px-2.5 py-3 text-sm font-extrabold text-sun-foreground shadow-float transition hover:pr-4 sm:flex"
       >
         <NotebookPen className="h-5 w-5" />
         <span className="hidden sm:inline [writing-mode:vertical-rl] rotate-180">Notas</span>
