@@ -8,7 +8,7 @@ import { BLOCKS, CONSOLIDATED, type Block } from "@/lib/learning";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/history")({
-  head: () => ({ meta: [{ title: "Histórico — GoEnglish!" }, { name: "description", content: "Consulta todo el vocabulario y las unidades que has estudiado." }] }),
+  head: () => ({ meta: [{ title: "Histórico — English Moves" }, { name: "description", content: "Consulta todo el vocabulario y las unidades que has estudiado." }, { property: "og:title", content: "Histórico — English Moves" }, { property: "og:description", content: "Consulta todo el vocabulario y las unidades que has estudiado." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: History,
 });
 

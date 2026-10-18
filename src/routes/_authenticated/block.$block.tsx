@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_authenticated/block/$block")({
   beforeLoad: ({ params }) => {
     if (!["daily", "general", "work"].includes(params.block)) throw notFound();
   },
-  head: ({ params }) => ({ meta: [{ title: `${BLOCKS[params.block as Block]?.name ?? "Bloque"} — GoEnglish!` }, { name: "description", content: "Elige una unidad y empieza a practicar." }] }),
+  head: ({ params }) => ({ meta: [{ title: `${BLOCKS[params.block as Block]?.name ?? "Bloque"} — English Moves` }, { name: "description", content: "Elige una unidad y empieza a practicar." }, { property: "og:title", content: `${BLOCKS[params.block as Block]?.name ?? "Bloque"} — English Moves` }, { property: "og:description", content: "Elige una unidad y empieza a practicar." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: BlockPage,
 });
 

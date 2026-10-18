@@ -5,7 +5,7 @@ import { useItems } from "@/lib/data";
 import { CONSOLIDATED } from "@/lib/learning";
 
 export const Route = createFileRoute("/_authenticated/review")({
-  head: () => ({ meta: [{ title: "Repaso — GoEnglish!" }, { name: "description", content: "Ejercicios adaptativos sobre lo que aún no tienes consolidado." }] }),
+  head: () => ({ meta: [{ title: "Repaso — English Moves" }, { name: "description", content: "Ejercicios adaptativos sobre lo que aún no tienes consolidado." }, { property: "og:title", content: "Repaso — English Moves" }, { property: "og:description", content: "Ejercicios adaptativos sobre lo que aún no tienes consolidado." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Review,
 });
 

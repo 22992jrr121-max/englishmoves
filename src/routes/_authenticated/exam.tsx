@@ -13,7 +13,7 @@ import { EXAM_PASS, REQUIRED_UNITS, examUnlocked, nextLevel, qualifyingUnits, ty
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/exam")({
-  head: () => ({ meta: [{ title: "Examen de nivel — GoEnglish!" }, { name: "description", content: "Demuestra lo aprendido y sube al siguiente nivel." }] }),
+  head: () => ({ meta: [{ title: "Examen de nivel — English Moves" }, { name: "description", content: "Demuestra lo aprendido y sube al siguiente nivel." }, { property: "og:title", content: "Examen de nivel — English Moves" }, { property: "og:description", content: "Demuestra lo aprendido y sube al siguiente nivel." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: ExamPage,
 });
 

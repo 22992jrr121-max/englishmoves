@@ -9,7 +9,7 @@ import { useAddNote, useNotes, noteToCard } from "@/lib/data";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/notes")({
-  head: () => ({ meta: [{ title: "Mi libreta — GoEnglish!" }, { name: "description", content: "Tus anotaciones personales para repasar cuando quieras." }] }),
+  head: () => ({ meta: [{ title: "Mi libreta — English Moves" }, { name: "description", content: "Tus anotaciones personales para repasar cuando quieras." }, { property: "og:title", content: "Mi libreta — English Moves" }, { property: "og:description", content: "Tus anotaciones personales para repasar cuando quieras." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: NotesPage,
 });
 

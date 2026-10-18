@@ -4,14 +4,14 @@ import { Logo } from "@/components/Logo";
 import daily from "@/assets/block-daily.png";
 import general from "@/assets/block-general.png";
 import work from "@/assets/block-work.png";
-import logo from "@/assets/goenglish-logo.png.asset.json";
+import logo from "@/assets/english-moves-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "GoEnglish! — Inglés para tu vida y tu trabajo" },
+      { title: "English Moves — Inglés para tu vida y tu trabajo" },
       { name: "description", content: "Aprende inglés cotidiano, general A1–C2 y vocabulario de tu profesión con lecciones creadas a tu medida, audio y corrección de pronunciación." },
-      { property: "og:title", content: "GoEnglish! — Inglés para tu vida y tu trabajo" },
+      { property: "og:title", content: "English Moves — Inglés para tu vida y tu trabajo" },
       { property: "og:description", content: "Tres recorridos, un test de nivel y lecciones a medida con corrección inteligente." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -57,7 +57,7 @@ function Landing() {
           </div>
           <div className="relative mx-auto w-full max-w-md">
             <div className="absolute inset-6 rounded-[3rem] bg-cobalt-soft" />
-            <img src={logo.url} alt="Logo de GoEnglish!" className="relative w-full" />
+            <img src={logo.url} alt="Logo de English Moves" className="relative w-full" />
           </div>
         </section>
 

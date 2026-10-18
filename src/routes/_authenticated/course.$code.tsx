@@ -13,7 +13,7 @@ import { normalize, unitUnlocked } from "@/lib/learning";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/course/$code")({
-  head: () => ({ meta: [{ title: "Unidad de Inglés General — GoEnglish!" }, { name: "description", content: "Vocabulario, gramática, phrasal verbs, listening, speaking, reading y writing." }] }),
+  head: () => ({ meta: [{ title: "Unidad de Inglés General — English Moves" }, { name: "description", content: "Vocabulario, gramática, phrasal verbs, listening, speaking, reading y writing." }, { property: "og:title", content: "Unidad de Inglés General — English Moves" }, { property: "og:description", content: "Vocabulario, gramática, phrasal verbs, listening, speaking, reading y writing." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: CoursePage,
 });
 

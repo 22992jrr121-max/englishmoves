@@ -7,7 +7,7 @@ import { COURSE_INDEX } from "@/lib/course";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/progress")({
-  head: () => ({ meta: [{ title: "Progreso — GoEnglish!" }, { name: "description", content: "Tu avance por bloque, aciertos y racha." }] }),
+  head: () => ({ meta: [{ title: "Progreso — English Moves" }, { name: "description", content: "Tu avance por bloque, aciertos y racha." }, { property: "og:title", content: "Progreso — English Moves" }, { property: "og:description", content: "Tu avance por bloque, aciertos y racha." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Progress,
 });
 

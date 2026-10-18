@@ -9,10 +9,10 @@ import { Logo } from "@/components/Logo";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar — GoEnglish!" },
-      { name: "description", content: "Accede o crea tu cuenta de GoEnglish! para guardar tu progreso." },
-      { property: "og:title", content: "Entrar — GoEnglish!" },
-      { property: "og:description", content: "Accede o crea tu cuenta de GoEnglish!." },
+      { title: "Entrar — English Moves" },
+      { name: "description", content: "Accede o crea tu cuenta de English Moves para guardar tu progreso." },
+      { property: "og:title", content: "Entrar — English Moves" },
+      { property: "og:description", content: "Accede o crea tu cuenta de English Moves." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
