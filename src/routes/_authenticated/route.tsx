@@ -18,7 +18,7 @@ function Layout() {
   const hideDock = path.startsWith("/onboarding");
   return (
     <div className="min-h-screen overflow-x-clip bg-background">
-      <div className={hideDock ? "" : "pb-32"}>
+      <div className={hideDock ? "" : "pb-44"}>
         <Outlet />
       </div>
       {!hideDock && <Dock />}
