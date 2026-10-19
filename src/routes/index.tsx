@@ -4,7 +4,6 @@ import { Logo } from "@/components/Logo";
 import daily from "@/assets/block-daily.png";
 import general from "@/assets/block-general.png";
 import work from "@/assets/block-work.png";
-import logo from "@/assets/english-moves-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,7 +34,7 @@ function Landing() {
       </header>
 
       <main className="mx-auto max-w-6xl px-5 pb-20">
-        <section className="grid items-center gap-8 py-8 md:grid-cols-2 md:py-16">
+        <section className="py-8 md:py-16">
           <div className="space-y-6">
             <span className="inline-flex rounded-full bg-sun-soft px-3 py-1 text-xs font-bold text-sun-foreground">Test de nivel gratis · 2 minutos</span>
             <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-navy sm:text-6xl">
@@ -54,10 +53,6 @@ function Landing() {
               <span className="inline-flex items-center gap-1.5"><Mic className="h-4 w-4 text-mint" /> Corrige tu pronunciación</span>
               <span className="inline-flex items-center gap-1.5"><Target className="h-4 w-4 text-sun" /> Repaso inteligente</span>
             </div>
-          </div>
-          <div className="relative mx-auto w-full max-w-md">
-            <div className="absolute inset-6 rounded-[3rem] bg-cobalt-soft" />
-            <img src={logo.url} alt="Logo de English Moves" className="relative w-full" />
           </div>
         </section>
 
